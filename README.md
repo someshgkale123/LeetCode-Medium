@@ -1,3 +1,3 @@
 # LeetCode-Medium
 
-This repsoitory contains python & some javascript solutions for LeetCode medium problems.
+This repository contains python & some javascript solutions for LeetCode medium problems.
