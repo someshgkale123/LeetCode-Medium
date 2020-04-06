@@ -26,25 +26,21 @@ Output: ["CIC","OSO","N M","T I","E N","S G","T"]
 
 
 Solution:
-
- class Solution:
+class Solution:
     def printVertically(self, s: str) -> List[str]:
-        li=s.split(" ")
         maxx=0
-        for i in li:
-            if len(i)>maxx:
-                maxx=len(i)
+        for i in s.split(" "):
+            maxx=max(maxx,len(i))
         i=0
         res=[]
-        str=""
         while maxx!=i:
-            for each in li:
+            str=""
+            for each in s.split(" "):
                 try:
                     str+=each[i]
                 except:
                     str+=" "
             i+=1
             res.append(str.rstrip())
-            str=""
         return(res)
             
