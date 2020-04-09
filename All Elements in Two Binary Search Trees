@@ -36,7 +36,6 @@ class Solution:
                 search(root.left,arr)
                 arr.append(root.val)
                 search(root.right,arr)
-        
         search(root1,arr1)
         search(root2,arr2)
         return sorted(arr1+arr2)
