@@ -1,0 +1,48 @@
+Problem Statement:
+
+Initially on a notepad only one character 'A' is present. You can perform two operations on this notepad for each step:
+Copy All: You can copy all the characters present on the notepad (partial copy is not allowed).
+Paste: You can paste the characters which are copied last time.
+
+Given a number n. You have to get exactly n 'A' on the notepad by performing the minimum number of steps permitted. 
+Output the minimum number of steps to get n 'A'.
+
+Example 1:
+Input: 3
+Output: 3
+Explanation:
+Intitally, we have one character 'A'.
+In step 1, we use Copy All operation.
+In step 2, we use Paste operation to get 'AA'.
+In step 3, we use Paste operation to get 'AAA'.
+
+
+Solution:
+class Solution:
+    def minSteps(self, n: int) -> int:
+        
+        dp=[0,0,2,3]
+        if n>3:
+            dp=dp+[float("inf")]*(n-3)
+        else:
+            return dp[n]
+            
+        li=[2,3,5]
+        for i in range(6,n+1):
+            if n%i==0:
+                li.append(i)
+        #print(li)
+        if n>3:        
+            for i in range(4,len(dp)):
+                temp=float("inf")
+                for j in li:
+                    if i%j==0:
+                        div=i//j
+                        #print(div)
+                        temp=min(temp,j+dp[div])
+                if temp==float("inf"):
+                    dp[i]=i
+                else:
+                    dp[i]=temp
+        #print(dp)
+        return(dp[-1])
