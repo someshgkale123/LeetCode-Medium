@@ -1,0 +1,63 @@
+Problem Statement:
+
+Given a string containing only three types of characters: '(', ')' and '*', write a function to check whether this string is valid. 
+We define the validity of a string by these rules:
+Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+Any right parenthesis ')' must have a corresponding left parenthesis '('.
+Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+'*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string.
+An empty string is also valid.
+
+Example 1:
+Input: "()"
+Output: True
+
+Example 2:
+Input: "(*)"
+Output: True
+
+Example 3:
+Input: "(*))"
+Output: True
+
+Solution:
+class Solution:
+    def checkValidString(self, s: str) -> bool:
+        """
+        trackleft=0
+        for i in s:
+            if i==")":
+                trackleft-=1
+            else:
+                trackleft+=1
+            if trackleft<0:
+                return False
+    
+        trackright=0
+        for i in range(len(s)-1,-1,-1):
+            if s[i]=="(":
+                trackright-=1
+            else:
+                trackright+=1
+            if trackright<0:
+                return False
+        return True
+        """
+        trackleft=0
+        trackright=0
+        li=[i for i in range(len(s))]
+        for i,j in zip(li,li[::-1]):
+            if s[i]==")":
+                trackleft-=1
+            elif s[i] in "(*":
+                trackleft+=1
+            if trackleft<0:
+                return False
+            
+            if s[j]=="(":
+                trackright-=1
+            elif s[j] in "*)":
+                trackright+=1
+            if trackright<0:
+                return False
+        return True
