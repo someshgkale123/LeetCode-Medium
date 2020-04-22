@@ -1,0 +1,70 @@
+Problem Statement:
+
+Solution
+Given an array of integers and an integer k, you need to find the total number of continuous subarrays whose sum equals to k.
+
+Example 1:
+Input:nums = [1,1,1], k = 2
+Output: 2
+Note:
+The length of the array is in range [1, 20,000].
+The range of numbers in the array is [-1000, 1000] and the range of the integer k is [-1e7, 1e7].
+
+
+Solution:
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        """
+        dict={}
+        i=0
+        j=1
+        cnt=0
+        while i<=len(nums)-2:
+            sm=sum(nums[i:j+1])
+            if sm==k:
+                if (i,j) not in dict:
+                    dict[(i,j)]=1
+                else:
+                    dict[(i,j)]+=1
+                cnt+=1
+                i+=1
+                j+=1
+            elif sm>k:
+                i+=1
+                j+=1
+            else:
+                j+=1
+        return cnt
+        """
+        """
+        i=0
+        summ=nums[0]
+        cnt=0
+        j=1
+        while j<=len(nums)-1:
+            summ+=nums[j]
+            if summ==k:
+                cnt+=1
+                summ-=nums[i]
+                i+=1
+            elif summ>k:
+                summ-=nums[i]
+                i+=1
+            j+=1
+            print(summ)
+        return cnt
+        """
+        
+        dict=collections.defaultdict(lambda : 0)
+        sm=0
+        cnt=0
+        for i in range(len(nums)):
+            sm+=nums[i]
+            if sm==k:
+                cnt+=1
+            if (sm-k) in dict:
+                cnt+=dict[sm-k]
+            dict[sm]+=1
+            #print(dict)
+        return cnt
+    
