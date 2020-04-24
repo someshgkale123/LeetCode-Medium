@@ -1,0 +1,52 @@
+Problem Statement:
+
+Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+Example 1:
+Input:
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+Output: [1,2,3,6,9,8,7,4,5]
+
+Example 2:
+Input:
+[
+  [1, 2, 3, 4],
+  [5, 6, 7, 8],
+  [9,10,11,12]
+]
+Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+
+
+Solution:
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        if not matrix:
+            return None
+        startrow=0
+        lastrow=len(matrix)
+        startcolumn=0
+        lastcolumn=len(matrix[0])
+        res=[]
+        while startrow<lastrow and startcolumn<lastcolumn:
+            for i in range(startcolumn,lastcolumn):
+                res+=[matrix[startrow][i]]
+            startrow+=1
+
+
+            for j in range(startrow,lastrow):
+                res+=[matrix[j][lastcolumn-1]]
+            lastcolumn-=1    
+            
+            if startrow<lastrow:
+                for k in range(lastcolumn-1,startcolumn-1,-1):
+                    res+=[matrix[lastrow-1][k]]
+                lastrow-=1
+
+            if startcolumn<lastcolumn:
+                for z in range(lastrow-1,startrow-1,-1):
+                    res+=[matrix[z][startcolumn]]
+                startcolumn+=1
+        return res
