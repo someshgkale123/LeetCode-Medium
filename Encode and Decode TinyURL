@@ -1,0 +1,45 @@
+Problem Statement:
+
+Note: This is a companion problem to the System Design problem: Design TinyURL.
+TinyURL is a URL shortening service where you enter a URL such as https://leetcode.com/problems/design-tinyurl and it returns a short URL 
+such as http://tinyurl.com/4e9iAk.
+Design the encode and decode methods for the TinyURL service. There is no restriction on how your encode/decode algorithm should work. 
+You just need to ensure that a URL can be encoded to a tiny URL and the tiny URL can be decoded to the original URL.
+
+
+
+Solution:
+class Codec:
+    def __init__(self):
+        self.dict={}
+        self.cnt=0
+        self.http=""
+
+    def encode(self, longUrl: str) -> str:
+        """Encodes a URL to a shortened URL.
+        """
+        split=longUrl.split("//")
+        self.http=split[0]
+        new=split[1]
+        new=new.split("/")
+        output=""
+        for i in new:
+            self.dict[self.cnt]=i
+            output+=str(self.cnt)
+            self.cnt+=1
+        return "{}//tinyurl.com/{}".format(self.http,output)
+
+    def decode(self, shortUrl: str) -> str:
+        """Decodes a shortened URL to its original URL.
+        """
+        old=shortUrl.split("/")[-1]
+        revoke="/"
+        for i in old:
+            revoke+="/"
+            revoke+=self.dict[int(i)]
+        return self.http+revoke
+        
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.decode(codec.encode(url))
