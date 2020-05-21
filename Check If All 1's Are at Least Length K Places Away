@@ -1,0 +1,44 @@
+Problem Statement:
+
+Given an array nums of 0s and 1s and an integer k, return True if all 1's are at least k places away from each other, otherwise return False.
+
+Example 1:
+Input: nums = [1,0,0,0,1,0,0,1], k = 2
+Output: true
+Explanation: Each of the 1s are at least 2 places away from each other.
+
+Example 2:
+Input: nums = [1,0,0,1,0,1], k = 2
+Output: false
+Explanation: The second 1 and third 1 are only one apart from each other.
+
+Example 3:
+Input: nums = [1,1,1,1,1], k = 0
+Output: true
+
+Example 4:
+Input: nums = [0,1,0,1], k = 1
+Output: true
+
+Solution:
+class Solution:
+    def kLengthApart(self, nums: List[int], k: int) -> bool:
+        """
+        diff=[]
+        for i,j in enumerate(nums):
+            if j==1:
+                diff+=[i]
+        for i in range(len(diff)-1):
+            if (diff[i+1]-diff[i])-1<k:
+                return False
+        return True
+        """
+        previndex=None
+        for i,j in enumerate(nums):
+            #print(previndex)
+            if j==1:
+                if previndex!=None and (i-previndex)-1<k:
+                    return False
+                previndex=i
+        return True
+ 
