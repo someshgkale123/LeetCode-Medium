@@ -1,0 +1,33 @@
+Problem Statement:
+
+Given a string s, find the longest palindromic subsequence's length in s. You may assume that the maximum length of s is 1000.
+
+Example 1:
+Input:
+"bbbab"
+Output:
+4
+One possible longest palindromic subsequence is "bbbb".
+
+Example 2:
+Input:
+"cbbd"
+Output:
+2
+One possible longest palindromic subsequence is "bb".
+
+
+
+Solution:
+class Solution:
+    def longestPalindromeSubseq(self, s: str) -> int:
+        a=s
+        b=s[::-1]
+        dp=[[0 for i in range(len(a)+1)] for i in range(len(b)+1)]
+        for i in range(1,len(dp)):
+            for j in range(1,len(dp[0])):
+                if a[i-1]==b[j-1]:
+                    dp[i][j]=1+dp[i-1][j-1]
+                else:
+                    dp[i][j]=max(dp[i-1][j],dp[i][j-1])
+        return dp[-1][-1]
