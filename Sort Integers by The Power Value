@@ -47,6 +47,9 @@ class Solution:
             temp=i
             cnt=0
             while temp!=1:
+                if temp in dict:
+                    cnt+=dict[temp]
+                    break
                 if temp%2==0:
                     temp=temp//2
                 else:
