@@ -1,0 +1,41 @@
+Problem Statement:
+
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+Example 1:
+Input: n = 12
+Output: 3 
+Explanation: 12 = 4 + 4 + 4.
+
+Example 2:
+Input: n = 13
+Output: 2
+Explanation: 13 = 4 + 9.
+
+
+Solution:
+class Solution:
+    def numSquares(self, n: int) -> int:
+        """
+        li=[]
+        for i in range(2,int(math.sqrt(n))+1):
+            li+=[i*i]
+        print(li)
+        cnt=0
+        for i in range(len(li)):
+            if n/li[i] in li:
+                while n/li[i] in li:
+                    cnt+=1
+                    n=n/li[i]
+            else:
+                cnt+=1
+                n-=li[i]
+        return(cnt)   
+        """
+        li=[i*i for i in range(1,int(math.sqrt(n))+1)]
+        dp=[0]+[float("inf")]*(n)
+        for i in range(1,len(dp)):
+            for each in li:
+                if each<=i:
+                    dp[i]=min(dp[i-each]+1,dp[i])
+        return(dp[-1])
