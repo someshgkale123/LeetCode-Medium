@@ -1,0 +1,35 @@
+Problem Statement:
+
+A string S of lowercase letters is given. We want to partition this string into as many parts as possible so that each letter appears in 
+at most one part, and return a list of integers representing the size of these parts.
+
+Example 1:
+Input: S = "ababcbacadefegdehijhklij"
+Output: [9,7,8]
+Explanation:
+The partition is "ababcbaca", "defegde", "hijhklij".
+This is a partition so that each letter appears in at most one part.
+A partition like "ababcbacadefegde", "hijhklij" is incorrect, because it splits S into less parts.
+
+
+Solution:
+class Solution:
+    def partitionLabels(self, S: str) -> List[int]:
+        dict={}
+        for i,j in enumerate(S):
+            if j not in dict:
+                dict[j]=[i]
+            else:
+                dict[j].append(i)
+        li=[[j[0],j[-1]] for i,j in dict.items()]
+        res=[li[0]]
+        for j in range(1,len(li)):
+            a,b=map(int,res[-1])
+            c,d=map(int,li[j])
+            if b>c and b<d:
+                res[-1][0]=min(a,c)
+                res[-1][1]=max(b,d)
+            elif b<c and b<d:
+                res.append(li[j])
+        ans=[(j+1 - i) for i,j in res]
+        return ans
