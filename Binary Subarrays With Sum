@@ -1,0 +1,47 @@
+Problem Statement:
+
+In an array A of 0s and 1s, how many non-empty subarrays have sum S?
+
+Example 1:
+Input: A = [1,0,1,0,1], S = 2
+Output: 4
+Explanation: 
+The 4 subarrays are bolded below:
+[1,0,1,0,1]
+[1,0,1,0,1]
+[1,0,1,0,1]
+[1,0,1,0,1]
+
+
+SOlution:
+class Solution:
+    def numSubarraysWithSum(self, A: List[int], S: int) -> int:
+        """
+        i=0
+        j=1
+        sm=A[0]
+        cnt=0
+        while j!=len(A)-1:
+            if sm<S:
+                sm+=A[j]
+                j+=1
+            elif sm>S:
+                sm-=A[i]
+                i+=1
+            if sm==S:
+                cnt+=1
+                sm+=A[j]
+                j+=1
+            
+            print(i,j)
+        """
+        dict={0:1}
+        currsum=0
+        cnt=0
+        for each in A:
+            currsum+=each
+            if currsum-S in dict:
+                cnt+=dict[currsum-S]
+            dict[currsum]=dict.get(currsum,0)+1
+            print(dict)
+        return cnt
