@@ -24,21 +24,33 @@ Explanation: We can't enter the room with number 2.
 
 
 
-Solution:
-class Solution:
+Solution:class Solution:
     def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
-        def dfs(li,visited):
-            for i in li:
-                if i not in visited:
-                    visited.add(i)
-                    dfs(rooms[i],visited)
-            res.append(len(visited)==len(rooms))
-        res=[]
-        for each in range(1):
-            visited={each}
-            dfs(rooms[each],visited)
-        #print(res)
-        return any(res)
+    
+        def dfs(node):
+            if node not in visited:
+                visited.add(node)
+            else:
+                return
+            for i in rooms[node]:
+                dfs(i)
+            
+        visited=set()
+        dfs(0)
+        return len(rooms)==len(visited)
         
-                    
+        """
+        visited={0}
+        curr=rooms[0]
+        while curr:
+            temp=curr.pop(0)
+            visited.add(temp)
+            queue=[]
+            for i in rooms[temp]:
+                if i not in visited and i not in curr:
+                    queue+=[i]
+            curr=queue+curr
+        return len(visited)==len(rooms)
+        """               
+    
         
