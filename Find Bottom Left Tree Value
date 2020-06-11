@@ -1,0 +1,64 @@
+Problem Statement:
+
+Given a binary tree, find the leftmost value in the last row of the tree.
+Example 1:
+Input:
+
+    2
+   / \
+  1   3
+
+Output:
+1
+
+Example 2:
+Input:
+
+        1
+       / \
+      2   3
+     /   / \
+    4   5   6
+       /
+      7
+
+Output:
+7
+
+
+Solution:
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def findBottomLeftValue(self, root: TreeNode) -> int:
+        """
+        stack=[root]
+        while stack:
+            temp=stack.pop(0)
+            if temp.right:
+                stack.append(temp.right)
+                #values.append(i.left.val)
+            if temp.left:
+                stack.append(temp.left)
+                #values.append(i.right.val)
+        return temp.val
+        #if not prev:
+         #   return 0
+        """
+        def dfs(root,currht):
+            if not root:
+                return
+            dfs(root.left,currht+1)
+            if currht>self.height:
+                self.height=currht
+                self.leftmost=root.val
+            dfs(root.right,currht+1)
+            
+        self.height=0
+        self.leftmost=root.val
+        dfs(root,0)
+        return self.leftmost
