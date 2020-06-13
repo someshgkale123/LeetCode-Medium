@@ -1,0 +1,55 @@
+Problem Statement:
+
+Given a set of distinct positive integers, find the largest subset such that every pair (Si, Sj) of elements in this subset satisfies:
+Si % Sj = 0 or Sj % Si = 0.
+If there are multiple solutions, return any subset is fine.
+
+Example 1:
+Input: [1,2,3]
+Output: [1,2] (of course, [1,3] will also be ok)
+
+Example 2:
+Input: [1,2,4,8]
+Output: [1,2,4,8]
+
+
+Solution:
+class Solution:
+    def largestDivisibleSubset(self, nums: List[int]) -> List[int]:
+        """
+        if not nums:
+            return []
+        
+        dict={}
+        stack=[nums[0]]
+        for each in range(1,len(nums)):
+            #print(stack)
+            if nums[each]%stack[-1]==0:
+                stack.append(nums[each])
+            else:
+                dict[len(stack)]=stack
+                while stack and (nums[each]%stack[-1]!=0):
+                    stack.pop()
+                stack.append(nums[each])
+        dict[len(stack)]=stack
+        print(dict)
+        mx=max(dict.keys())
+        for i,j in dict.items():
+            if i==mx:
+                return j
+        """
+        if not nums:
+            return []
+        nums.sort()
+        value=[]
+        length=0
+        dp=[[nums[i]] for i in range(len(nums))]
+        for i in range(len(nums)):
+            for j in range(i-1,-1,-1):
+                if nums[i]%nums[j]==0:
+                    if len(dp[j])>=len(dp[i]):
+                        dp[i]=dp[j]+[nums[i]]
+            if len(dp[i])>length:
+                value=dp[i]
+                length=len(dp[i])
+        return value
