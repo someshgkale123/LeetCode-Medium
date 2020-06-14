@@ -1,0 +1,83 @@
+Problem Statement:
+
+There are n cities connected by m flights. Each flight starts from city u and arrives at v with a price w.
+Now given all the cities and flights, together with starting city src and the destination dst, your task is to find the cheapest price 
+from src to dst with up to k stops. If there is no such route, output -1.
+
+Example 1:
+Input: 
+n = 3, edges = [[0,1,100],[1,2,100],[0,2,500]]
+src = 0, dst = 2, k = 1
+Output: 200
+Explanation: 
+The graph looks like this:
+The cheapest price from city 0 to city 2 with at most 1 stop costs 200, as marked red in the picture.
+
+Example 2:
+Input: 
+n = 3, edges = [[0,1,100],[1,2,100],[0,2,500]]
+src = 0, dst = 2, k = 0
+Output: 500
+Explanation: 
+The graph looks like this:
+The cheapest price from city 0 to city 2 with at most 0 stop costs 500, as marked blue in the picture.
+
+
+
+Solution:
+class Solution:
+    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, K: int) -> int:
+        """
+        dict=collections.defaultdict(list)
+        mat=[[0 for i in range(n)] for i in range(n)]
+        for flight in flights:
+            i,j,amount=map(int,flight)
+            dict[i].append(j)
+            mat[i][j]=amount
+        
+        #print(dict)
+        print(mat)
+        
+        def dfs(src,dst,K,visited):
+            #summ=0
+            temp=dict[src]
+            for each in temp:
+                self.summ+=mat[src][each]
+                if each==dst:
+                    li.append(self.summ)
+                    self.summ=0
+                    return
+                dfs(each,dst,K,visited)
+            
+        li=[]
+        self.summ=0
+        self.stops=0
+        dfs(src,dst,K,[src])
+            
+        if li:
+            return min(li)
+        else:
+            return -1
+        """
+        ####### Using BFS
+        city_cost=[float("inf")]*n
+        dict=collections.defaultdict(list)
+        for each in flights:
+            i,j,k=each
+            dict[i].append((j,k))
+            
+        
+        stack=[(src,0,0)]
+        while stack:
+            city,amount,k=stack.pop(0)
+            if city_cost[city]<=amount or (k>K and city!=dst):
+                continue
+            city_cost[city]=amount
+            for i,j in dict[city]:
+                stack.append((i,amount+j,k+1))
+        
+        if city_cost[dst]==float("inf"):
+            return -1
+        else:
+            return city_cost[dst]
+        
