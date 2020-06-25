@@ -23,6 +23,7 @@ SOlution:
 #         self.right = right
 class Solution:
     def rightSideView(self, root: TreeNode) -> List[int]:
+    ########## BFS Iterative
         if not root:
             return
         res=[root.val]
@@ -40,3 +41,14 @@ class Solution:
             else:
                 break
         return res
+    ########## DFS recursive
+        dict={}
+        def helper(root,level):
+            if not root:
+                return
+            dict[level]=root.val
+            helper(root.left,level+1)
+            helper(root.right,level+1)
+        helper(root,0)
+        return [i for i in dict.values()]
+        
