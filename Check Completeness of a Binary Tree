@@ -1,0 +1,53 @@
+Problem Statement:
+
+Given a binary tree, determine if it is a complete binary tree.
+Definition of a complete binary tree from Wikipedia:
+In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+
+Example 1:
+Input: [1,2,3,4,5,6]
+Output: true
+Explanation: Every level before the last is full (ie. levels with node-values {1} and {2, 3}), and all nodes in the last level ({4, 5, 6}) are as far left as possible.
+
+Example 2:
+Input: [1,2,3,4,5,null,7]
+Output: false
+Explanation: The node with value 7 isn't as far left as possible.
+ 
+ 
+ 
+SOlution:
+        ##### BFS with extra space Time - O(n) Space - O(n)
+        li=[]
+        if not root:
+            return True
+        stack=[(root,1)]
+        while stack:
+            node,index=stack.pop(0)
+            li.append(index)
+            if node.left:
+                stack.append((node.left,index*2))
+            if node.right:
+                stack.append((node.right,index*2+1))
+            
+        for i in range(len(li)-1):
+            if li[i]+1!=li[i+1]:
+                return False
+        return True
+        
+        """
+        ######## Optimized BFS
+        lastindex,nodes=0,0
+        if not root:
+            return True
+        stack=[(root,1)]
+        while stack:
+            node,index=stack.pop(0)
+            lastindex=index
+            nodes+=1
+            if node.left:
+                stack.append((node.left,index*2))
+            if node.right:
+                stack.append((node.right,index*2+1))
+        return lastindex==nodes
+        """
