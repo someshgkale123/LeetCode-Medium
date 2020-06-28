@@ -54,3 +54,22 @@ class Solution:
             return left or right
         
         return getlca(root,mx-1,0)
+        ######## One pass O(n)
+        """
+        self.res=None
+        self.mx=0
+        def getlca(root,depth):
+            self.mx=max(self.mx,depth)
+            if not root:
+                return depth
+            
+            left=getlca(root.left,depth+1)
+            right=getlca(root.right,depth+1)
+            
+            if left == right == self.mx:
+                self.res=root
+            return max(left,right)
+        
+        getlca(root,0)
+        return self.res
+        """
