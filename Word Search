@@ -1,0 +1,84 @@
+Problem Statement:
+ 
+Given a 2D board and a word, find if the word exists in the grid.
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. 
+The same letter cell may not be used more than once.
+
+Example:
+board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+
+Given word = "ABCCED", return true.
+Given word = "SEE", return true.
+Given word = "ABCB", return false.
+ 
+ 
+ 
+Solution:
+    """
+    ################## Slower solution
+    
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        li=[]
+        self.new=""
+        self.index=0 
+        def dfs(temp,i,j):
+            if i<0 or i>=len(temp) or j<0 or j>=len(temp[0]) or temp[i][j]=="0":
+                return
+            if self.index>len(word)-1 or temp[i][j]!=word[self.index]:
+                return
+            
+            self.new+=temp[i][j]
+            temp[i][j]="0"
+            self.index+=1
+        
+            dfs(temp,i,j+1)
+            dfs(temp,i+1,j)
+            dfs(temp,i,j-1)
+            dfs(temp,i-1,j)
+            if self.new!=word:
+                self.new=self.new[:-1]
+                self.index-=1
+                temp[i][j]=board[i][j]
+        
+        
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                temp=[i[:] for i in board]
+                dfs(temp,i,j)
+                if self.new==word:
+                    return True
+        return False
+     """
+     ################### Optimized and Faster solution
+     
+     def exist(self, board: List[List[str]], word: str) -> bool:
+       
+        def dfs(temp,i,j,word):
+            if len(word)==0:
+                return True
+            
+            if i<0 or i>=len(temp) or j<0 or j>=len(temp[0]) or temp[i][j]=="V":
+                return False
+            if temp[i][j]!=word[0]:
+                return False
+            
+            value=temp[i][j]
+            temp[i][j]="V"
+            
+            ans = dfs(temp,i,j+1,word[1:]) or dfs(temp,i+1,j,word[1:]) or dfs(temp,i,j-1,word[1:]) or dfs(temp,i-1,j,word[1:])
+            temp[i][j]=value
+            return ans
+       
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j]==word[0]:
+                    if dfs(board,i,j,word):
+                        return True
+        return False
+               
+     
