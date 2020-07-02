@@ -1,0 +1,73 @@
+Problem Statement:
+
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+Example:
+Given the sorted linked list: [-10,-3,0,5,9],
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+ 
+ Solution:
+ # Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def sortedListToBST(self, head: ListNode) -> TreeNode:
+        """
+        ####### Converting the linkedlist to array using extra space O(N) , O(N)
+        if not head:
+            return
+        li=[]
+        while head:
+            li.append(head.val)
+            head=head.next
+        
+        def create(low,high,new):
+            if low>high:
+                return
+            mid=(low+high)//2
+            new=TreeNode(li[mid])
+            new.left=create(low,mid-1,new)
+            new.right=create(mid+1,high,new)
+            return new
+        return create(0,len(li)-1,TreeNode(0))
+        """
+        ########### Without using extra space O(NlogN), O(logN) as it is height balanced tree
+        def getmid(head):
+            prevnode=None
+            fastnode=head
+            slownode=head
+            while fastnode and fastnode.next:
+                prevnode=slownode
+                slownode=slownode.next
+                fastnode=fastnode.next.next
+
+            if prevnode:
+                prevnode.next=None
+            return slownode
+        
+        def construct(head):
+            if not head:
+                return None
+            mid=getmid(head)
+            new=TreeNode(mid.val)
+            if head==mid:
+                return new
+            new.left=construct(head)
+            new.right=construct(mid.next)
+            return new
+        return construct(head)
+       
