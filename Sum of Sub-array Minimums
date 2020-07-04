@@ -1,0 +1,36 @@
+Problem Statement:
+
+Given an array of integers A, find the sum of min(B), where B ranges over every (contiguous) subarray of A.
+Since the answer may be large, return the answer modulo 10^9 + 7.
+
+Example 1:
+Input: [3,1,2,4]
+Output: 17
+Explanation: Subarrays are [3], [1], [2], [4], [3,1], [1,2], [2,4], [3,1,2], [1,2,4], [3,1,2,4]. 
+Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1.  Sum is 17.
+
+
+
+Solution:
+class Solution:
+    def sumSubarrayMins(self, A: List[int]) -> int:
+    
+        lt,rt=[0]*len(A),[0]*len(A)
+        stack1,stack2=[],[]
+        for i in range(len(A)):
+            cnt=1
+            while stack1 and stack1[-1][0]>=A[i]:
+                cnt+=stack1.pop()[1]
+            lt[i]=cnt
+            stack1.append([A[i],cnt])
+            
+        for i in range(len(A))[::-1]:
+            cnt=1
+            while stack2 and stack2[-1][0]>A[i]:
+                cnt+=stack2.pop()[1]
+            rt[i]=cnt
+            stack2.append([A[i],cnt])
+        summ=0
+        for i in range(len(A)):
+            summ+=A[i]*(lt[i]*rt[i])
+        return summ%(10**9+7)
