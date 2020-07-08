@@ -1,0 +1,46 @@
+Problem Statement:
+Reverse a linked list from position m to n. Do it in one-pass.
+Note: 1 ≤ m ≤ n ≤ length of list.
+Example:
+Input: 1->2->3->4->5->NULL, m = 2, n = 4
+Output: 1->4->3->2->5->NULL
+
+
+
+Solution:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
+        
+        ################# Iterative approach O(n), O(1)
+        if not head:
+            return None
+        
+        prev=None
+        curr=head
+        while m>1:
+            prev=curr
+            curr=curr.next
+            m-=1
+            n-=1
+        
+        brk=prev
+        end=curr
+        while n:
+            nxt=curr.next
+            curr.next=prev
+            prev=curr
+            curr=nxt
+            n-=1
+        if brk:
+            brk.next=prev
+        else:
+            head=prev
+        end.next=curr
+        return head
+        
+            
