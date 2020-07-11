@@ -33,6 +33,7 @@ Solution:
 
 class Solution:
     def splitListToParts(self, root: ListNode, k: int) -> List[ListNode]:
+        ########### O(length+k), O(max(k,split))
         res=[]
         length=0
         traverse=root
