@@ -1,0 +1,96 @@
+Problem Statement:
+
+Given the head of a linked list, we repeatedly delete consecutive sequences of nodes that sum to 0 until there are no such sequences.
+After doing so, return the head of the final linked list.  You may return any such answer.
+(Note that in the examples below, all sequences are serializations of ListNode objects.)
+
+Example 1:
+Input: head = [1,2,-3,3,1]
+Output: [3,1]
+Note: The answer [1,2,1] would also be accepted.
+
+Example 2:
+Input: head = [1,2,3,-3,4]
+Output: [1,2,4]
+
+Example 3:
+Input: head = [1,2,3,-3,-2]
+Output: [1]
+
+
+Solution:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeZeroSumSublists(self, head: ListNode) -> ListNode:
+        """
+        ######## More memory usage
+        li=[]
+        while head:
+            li.append(head.val)
+            head=head.next
+        index=set()
+        dict={}
+        prefix=0
+        for i,j in enumerate(li):
+            prefix+=j
+            if prefix in dict or prefix==0:
+                if prefix==0:
+                    start=0
+                else:
+                    start=dict[prefix]+1
+                for each in range(start,i+1):
+                    index.add(each)
+                dict={}
+            else:
+                dict[prefix]=i
+        
+        ans=ListNode(0)
+        temp=ans
+        for i in range(len(li)):
+            if i not in index:
+                temp.next=ListNode(li[i])
+                temp=temp.next
+        if not index:
+            return ans.next
+        return self.removeZeroSumSublists(ans.next)
+        """
+        
+        ####### Less memory usage
+        li=[]
+        while head:
+            li.append(head.val)
+            head=head.next
+            
+        def getzerosum(li):
+            index=set()
+            dict={}
+            prefix=0
+            for i,j in enumerate(li):
+                prefix+=j
+                if prefix in dict or prefix==0:
+                    if prefix==0:
+                        start=0
+                    else:
+                        start=dict[prefix]+1
+                    for each in range(start,i+1):
+                        index.add(each)
+                    dict={}
+                else:
+                    dict[prefix]=i
+            if index:
+                li=[j for i,j in enumerate(li) if i not in index]
+                return getzerosum(li)
+            else:
+                return li
+            
+        ans=getzerosum(li)
+        new=ListNode(0)
+        ptr=new
+        for i in ans:
+            ptr.next=ListNode(i)
+            ptr=ptr.next
+        return new.next
