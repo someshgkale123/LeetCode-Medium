@@ -1,0 +1,52 @@
+Problem Statement:
+
+Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+You may not modify the values in the list's nodes, only nodes itself may be changed.
+
+Example 1:
+Given 1->2->3->4, reorder it to 1->4->2->3.
+Example 2:
+Given 1->2->3->4->5, reorder it to 1->5->2->4->3.
+
+
+
+Solution:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reorderList(self, head: ListNode) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        ########## O(n), O(1)
+        if head and head.next:
+            # Traverse the linkedlist to find the middle element
+            temp=slow=fast=head
+            while fast and fast.next:
+                temp=slow
+                slow=slow.next
+                fast=fast.next.next
+            # split the linked list from middle eleement and reverse the 2nd half
+            temp.next=None
+            prev=None
+            while slow:
+                nxt=slow.next
+                slow.next=prev
+                prev=slow
+                slow=nxt
+            # have one pointer at start of 1st half of linkedlist and second pointer at start of 2nd half
+            left=head
+            right=prev
+            while left and right:
+                # join nodes of 1st half and 2nd half alternately
+                leftnxt=left.next
+                rightnxt=right.next
+                left.next=right
+                if leftnxt:
+                    right.next=leftnxt
+                left=leftnxt
+                right=rightnxt
