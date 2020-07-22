@@ -1,0 +1,45 @@
+Problem Statement:
+
+Given a positive integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
+
+Example:
+Input: 3
+Output:
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+
+
+Solution:
+class Solution:
+    def generateMatrix(self, n: int) -> List[List[int]]:
+        ##### O(n) n be all the elements in the matrix i.e n*n ,O(n*n)
+        matrix=[[0 for i in range(n)] for j in range(n)]
+        firstrow=0
+        lastrow=n-1
+        firstcolumn=0
+        lastcolumn=n-1
+        number=1
+        while firstrow<=lastrow and firstcolumn <=lastcolumn:
+            for column in range(firstcolumn,lastcolumn+1):
+                matrix[firstrow][column]=number
+                number+=1
+            firstrow+=1
+
+            for row in range(firstrow,lastrow+1):
+                matrix[row][lastcolumn]=number
+                number+=1
+            lastcolumn-=1
+
+            for column in range(lastcolumn,firstcolumn-1,-1):
+                matrix[lastrow][column]=number
+                number+=1
+            lastrow-=1
+
+            for row in range(lastrow,firstrow-1,-1):
+                matrix[row][firstcolumn]=number
+                number+=1
+            firstcolumn+=1
+        return(matrix)
