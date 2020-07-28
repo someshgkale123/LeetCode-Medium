@@ -39,7 +39,7 @@ Asteroids moving the same direction never meet, so no asteroids will meet each o
 Solution:
 class Solution:
     def asteroidCollision(self, asteroids: List[int]) -> List[int]:
-        
+         
         li=[]
         for i in range(len(asteroids)):
             while li and li[-1]>0 and asteroids[i]<0:
