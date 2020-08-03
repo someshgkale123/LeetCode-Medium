@@ -1,0 +1,68 @@
+Problem Statement:
+
+Given an array arr that is a permutation of [0, 1, ..., arr.length - 1], we split the array into some number of "chunks" (partitions), and individually sort each chunk.  
+After concatenating them, the result equals the sorted array.
+What is the most number of chunks we could have made?
+
+Example 1:
+Input: arr = [4,3,2,1,0]
+Output: 1
+Explanation:
+Splitting into two or more chunks will not return the required result.
+For example, splitting into [4, 3], [2, 1, 0] will result in [3, 4, 0, 1, 2], which isn't sorted.
+
+Example 2:
+Input: arr = [1,0,2,3,4]
+Output: 4
+Explanation:
+We can split into two chunks, such as [1, 0], [2, 3, 4].
+However, splitting into [1, 0], [2], [3], [4] is the highest number of chunks possible.
+
+
+Solution:
+class Solution:
+    def maxChunksToSorted(self, arr: List[int]) -> int:
+        """
+        O(N),O(N)
+        if len(arr)==1:
+            return 1
+        cnt=0
+        temp=[]
+        for i,j in enumerate(arr):
+            if i!=j:
+                temp.append(j)
+            else:
+                if temp:
+                    if max(temp)>j:
+                        temp.append(j)
+                    else:
+                        cnt+=1
+                else:
+                    cnt+=1
+        if temp:
+            cnt+=1
+        return cnt
+        """
+        
+        """
+        ###### Recursive O(N),O(N)
+        
+        self.cnt=0
+        def getmin(temp):
+            if not temp:
+                return
+            self.cnt+=1
+            mn=min(temp)
+            indx=temp.index(mn)
+            getmin(temp[indx+1:])
+        
+        getmin(arr)
+        return self.cnt
+        """
+        ###### O(N),O(1)
+        maxx,cnt=0,0
+        for i in range(len(arr)):
+            maxx=max(maxx,arr[i])
+            if maxx==i:
+                cnt+=1
+        return cnt
