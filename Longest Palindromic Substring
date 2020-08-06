@@ -16,6 +16,8 @@ Output: "bb"
 Solution:
 class Solution(object):
     def longestPalindrome(self, s):
+        """
+        ######## O(N^3),O(N)
         maxlen=""
         for i in range(len(s)):
             for j in range(len(s),i,-1):
@@ -25,3 +27,26 @@ class Solution(object):
                     maxlen=s[i:j]
                     break
         return maxlen
+        """
+        
+        ###### O(N*N), O(1)
+        if not s:
+            return ""
+        
+        def expandmiddle(s,start,end):
+            while start>=0 and end<len(s) and s[start]==s[end]:
+                start-=1
+                end+=1
+            return end-start-1
+        
+        left,right=0,0
+        for i in range(0,len(s)):
+            odd=expandmiddle(s,i,i)
+            even=expandmiddle(s,i,i+1)
+            mxstring=max(odd,even)
+            if mxstring>right-left:
+                left=i-(mxstring-1)//2
+                right=i+mxstring//2
+                # print(left,right,mxstring)
+            
+        return s[left:right+1]
