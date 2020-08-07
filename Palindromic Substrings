@@ -17,7 +17,8 @@ Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
 Solution:
 class Solution:
     def countSubstrings(self, s: str) -> int:
-        # O(N^2),O(N)
+        ######## O(N^2),O(N)
+        """
         if not s:
             return 0
         
@@ -36,3 +37,21 @@ class Solution:
             
        
         return len(st)
+        """
+        ########## O(N^2),O(1)
+        if not s:
+            return 0
+        
+        def expandmiddle(s,start,end):
+            while start>=0 and end<len(s) and s[start]==s[end]:
+                self.res+=1 
+                start-=1
+                end+=1
+            return
+                
+        self.res=0
+        for i in range(len(s)):
+            expandmiddle(s,i,i)
+            expandmiddle(s,i,i+1)
+       
+        return self.res
