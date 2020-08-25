@@ -1,0 +1,74 @@
+Problem Statement:
+
+Equations are given in the format A / B = k, where A and B are variables represented as strings, and k is a real number (floating point number). 
+Given some queries, return the answers. If the answer does not exist, return -1.0.
+
+Example:
+Given a / b = 2.0, b / c = 3.0.
+queries are: a / c = ?, b / a = ?, a / e = ?, a / a = ?, x / x = ? .
+return [6.0, 0.5, -1.0, 1.0, -1.0 ].
+The input is: vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries , where equations.size() == values.size(), 
+and the values are positive. This represents the equations. Return vector<double>.
+According to the example above:
+
+equations = [ ["a", "b"], ["b", "c"] ],
+values = [2.0, 3.0],
+queries = [ ["a", "c"], ["b", "a"], ["a", "e"], ["a", "a"], ["x", "x"] ]. 
+
+
+Solution:
+class Solution:
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
+        ########## O(QE);O(max(Q,E)
+        graph=defaultdict(list)
+        for equ,value in zip(equations,values):
+            graph[equ[0]]+=[str(value)+equ[1]]
+            graph[equ[1]]+=[str(1.0/value)+equ[0]]
+        ans=[]
+        for each in queries:
+            if each[0] not in graph or each[1] not in graph:
+                ans.append(-1.0)
+                continue
+            if each[0]==each[1]:
+                ans.append(1.0)
+                continue
+            check=each[1]
+            queue=deque(graph[each[0]])
+            visited=set()
+            flag=False
+            while queue:
+                for i in range(len(queue)):
+                    curr=queue.popleft()
+                    if curr in visited:
+                        continue
+                    visited.add(curr)
+                    value=""
+                    char=""
+                    for ch in curr:
+                        if char or ch.isalpha():
+                            char+=ch
+                        else:
+                            value+=ch
+                    #print(value,char)
+                    if char==check:
+                        ans.append(float(value))
+                        flag=True
+                        break
+                    for neigh in graph[char]:
+                        d=""
+                        c=""
+                        for chh in neigh:
+                            if c or chh.isalpha():
+                                c+=chh
+                            else:
+                                d+=chh
+                        newvalue=float(d)*float(value)
+                        queue.append((str(newvalue)+c))
+                if flag:
+                    break
+            if not flag:
+                ans.append(-1.0)
+                    
+        return(ans)
+                        
+                
