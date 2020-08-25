@@ -20,6 +20,7 @@ Solution:
 class Solution:
     def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
         ########## O(QE);O(max(Q,E)
+        """
         graph=defaultdict(list)
         for equ,value in zip(equations,values):
             graph[equ[0]]+=[str(value)+equ[1]]
@@ -70,5 +71,57 @@ class Solution:
                 ans.append(-1.0)
                     
         return(ans)
-                        
-                
+        """
+        ############# defining functions and avoiding duplicate work
+        
+        def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
+            graph=defaultdict(list)
+            for equ,value in zip(equations,values):
+                graph[equ[0]]+=[str(value)+equ[1]]
+                graph[equ[1]]+=[str(1.0/value)+equ[0]]
+            ans=[]
+
+            def seperate(curr):
+                value=""
+                char=""
+                for ch in curr:
+                    if char or ch.isalpha():
+                        char+=ch
+                    else:
+                        value+=ch
+                return value,char
+
+            def bfs(each):
+                if each[0] not in graph or each[1] not in graph:
+                    return(-1.0)
+                if each[0]==each[1]:
+                    return(1.0)
+
+                check=each[1]
+                queue=deque(graph[each[0]])
+                visited=set()
+                while queue:
+                    for i in range(len(queue)):
+                        curr=queue.popleft()
+                        if curr in visited:
+                            continue
+                        visited.add(curr)
+                        value,char=seperate(curr)
+
+                        if char==check:
+                            return(float(value))
+                        for neigh in graph[char]:
+                            d,c=seperate(neigh)
+                            newvalue=float(d)*float(value)
+                            queue.append((str(newvalue)+c))
+
+                return(-1.0)
+
+
+            for each in queries:
+                ans.append(bfs(each))
+
+            return(ans)
+
+
+
