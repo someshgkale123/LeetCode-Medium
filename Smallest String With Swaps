@@ -1,0 +1,94 @@
+Problem Statement:
+
+You are given a string s, and an array of pairs of indices in the string pairs where pairs[i] = [a, b] indicates 2 indices(0-indexed) of the string.
+You can swap the characters at any pair of indices in the given pairs any number of times.
+Return the lexicographically smallest string that s can be changed to after using the swaps.
+
+Example 1:
+Input: s = "dcab", pairs = [[0,3],[1,2]]
+Output: "bacd"
+Explaination: 
+Swap s[0] and s[3], s = "bcad"
+Swap s[1] and s[2], s = "bacd"
+
+Example 2:
+Input: s = "dcab", pairs = [[0,3],[1,2],[0,2]]
+Output: "abcd"
+Explaination: 
+Swap s[0] and s[3], s = "bcad"
+Swap s[0] and s[2], s = "acbd"
+Swap s[1] and s[2], s = "abcd"
+
+Example 3:
+Input: s = "cba", pairs = [[0,1],[1,2]]
+Output: "abc"
+Explaination: 
+Swap s[0] and s[1], s = "bca"
+Swap s[1] and s[2], s = "bac"
+Swap s[0] and s[1], s = "abc"
+
+
+SOlution:
+class Solution:
+    def smallestStringWithSwaps(self, s: str, pairs: List[List[int]]) -> str:
+        
+        """
+        pairs.sort(key=lambda x:(x[0],x[1]))
+        print(pairs)
+        stack=[]
+        for i in pairs:
+            if not stack:
+                stack.append(set(i))
+            else:
+                a,b=i
+                if a in stack[-1] or b in stack[-1]:
+                    stack[-1].add(a)
+                    stack[-1].add(b)
+                else:
+                    stack.append(set(i))
+        print(stack)
+        for each in stack:
+            temp=""
+            for indx in each:
+                temp+=s[indx]
+            temp=sorted(temp)
+            for indx,ch in zip(each,temp):
+                s[indx]=ch
+        return "".join(s)
+        """
+        ######### BFS
+        if not pairs:
+            return s
+        s=list(s)
+        graph=defaultdict(list)
+        for i,j in pairs:
+            graph[i]+=[j]
+            graph[j]+=[i]
+        
+        stack=[]
+        visited=set()
+        for i in range(len(s)):
+            queue=deque(graph[i])
+            while queue:
+                for itr in range(len(queue)):
+                    node=queue.popleft()
+                    if node in visited:
+                        continue
+                    visited.add(node)
+                    for each in graph[node]:
+                        queue.append(each)
+                    del graph[node]
+            stack.append(visited)
+            visited=set()
+        #print(stack)
+        for connct in stack:
+            temp=[]
+            for i in connct:
+                temp+=[s[i]]
+            temp.sort()
+            
+            for ch,ind in zip(temp,sorted(connct)):
+                s[ind]=ch
+            #print(temp,connct)
+            
+        return "".join(s)
