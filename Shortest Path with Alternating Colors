@@ -1,0 +1,67 @@
+Problem Statement:
+
+Consider a directed graph, with nodes labelled 0, 1, ..., n-1.  In this graph, each edge is either red or blue, and there could be self-edges or parallel edges.
+Each [i, j] in red_edges denotes a red directed edge from node i to node j.  Similarly, each [i, j] in blue_edges denotes a blue directed edge from node i to node j.
+Return an array answer of length n, where each answer[X] is the length of the shortest path from node 0 to node X such that the edge colors alternate along the path 
+(or -1 if such a path doesn't exist).
+
+ 
+Example 1:
+Input: n = 3, red_edges = [[0,1],[1,2]], blue_edges = []
+Output: [0,1,-1]
+
+Example 2:
+Input: n = 3, red_edges = [[0,1]], blue_edges = [[2,1]]
+Output: [0,1,-1]
+
+Example 3:
+Input: n = 3, red_edges = [[1,0]], blue_edges = [[2,1]]
+Output: [0,-1,-1]
+
+Example 4:
+Input: n = 3, red_edges = [[0,1]], blue_edges = [[1,2]]
+Output: [0,1,2]
+
+Example 5:
+Input: n = 3, red_edges = [[0,1],[0,2]], blue_edges = [[1,0]]
+Output: [0,1,1]
+
+Solution:
+class Solution:
+    def shortestAlternatingPaths(self, n: int, red_edges: List[List[int]], blue_edges: List[List[int]]) -> List[int]:
+        ######### O(B+R), length of red edges and blue edges
+        graph=defaultdict(list)
+        color=defaultdict(list)
+        if not red_edges and not blue_edges:
+            return [0]+[-1]*(n-1)
+        for i,j in red_edges:
+            graph[i]+=[j]
+            color[(i,j)]+=["red"]
+        
+        
+        for i,j in blue_edges:
+            graph[i]+=[j]
+            color[(i,j)]+=["blue"]
+            
+        ans=defaultdict(int)
+        queue=deque([[0,0,"",0]])
+        while queue:
+            for i in range(len(queue)):    
+                prev,node,clr,cnt=queue.popleft()
+                if clr in color[(prev,node)]:
+                    color[(prev,node)].remove(clr)
+                    if not color[(prev,node)]:
+                        del color[(prev,node)]
+                
+                if node in ans:
+                    ans[node]=min(ans[node],cnt)
+                else:
+                    ans[node]=cnt
+                
+                for each in graph[node]:
+                    for nclr in color[(node,each)]:
+                        if clr!=nclr:
+                            queue.append([node,each,nclr,cnt+1])
+                            
+        res=[ans[i] if i in ans  else -1 for i in range(n) ]
+        return res
