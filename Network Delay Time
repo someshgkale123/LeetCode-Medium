@@ -16,42 +16,34 @@ class Solution:
     def networkDelayTime(self, times: List[List[int]], N: int, K: int) -> int:
         """
         ########### Using bfs approach (Dijkstra's)
-        time=defaultdict(int)
         graph=defaultdict(list)
         for i,j,k in times:
-            graph[i]+=[j]
-            time[(i,j)]=k
-        
+            graph[i].append((j,k))
+            
         queue=deque()
-        for each in graph[K]:
-            queue.append([K,each,time[(K,each)]])
+        for neigh,time in sorted(graph[K],key=lambda x:x[1]):
+            queue.append([K,neigh,time])
         #print(queue)
         if not queue:
             return -1
-        totaltime=0
+        
         visited={K:0}
         #print(queue)
         while queue:
-            for i in range(len(queue)):
-                src,target,tm=queue.popleft()
-                #print(src,target,tm)
-                if target in visited:
-                    visited[target]=min(tm,visited[target])
-                    continue
-                visited[target]=tm
-                
-                for each in graph[target]:
-                    queue.append([target,each,time[(target,each)]+tm])
-            
+            #print(queue)
+            src,target,tm=queue.popleft()
+            if target in visited:
+                continue
+            visited[target]=tm
+            for neigh,time in graph[target]:
+                if neigh not in visited:
+                    queue.append([target,neigh,time+tm])
+            queue=deque(sorted(queue,key=lambda x:x[2]))
         #print(visited)
-        ans=0
-        
-        for i in range(1,N+1):
-            if i not in visited:
-                return -1
-            else:
-                ans=max(ans,visited[i])
-        return ans
+        if len(visited)!=N:
+            return -1
+        else:
+            return max(visited.values())
         """
         ###################### Using minheap approach O(E+ElogE),O(E+V)
        
