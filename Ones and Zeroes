@@ -1,0 +1,49 @@
+Problem Statement:
+
+Given an array, strs, with strings consisting of only 0s and 1s. Also two integers m and n.
+Now your task is to find the maximum number of strings that you can form with given m 0s and n 1s. Each 0 and 1 can be used at most once.
+
+Example 1:
+Input: strs = ["10","0001","111001","1","0"], m = 5, n = 3
+Output: 4
+Explanation: This are totally 4 strings can be formed by the using of 5 0s and 3 1s, which are "10","0001","1","0".
+
+Example 2:
+Input: strs = ["10","0","1"], m = 1, n = 1
+Output: 2
+Explanation: You could form "10", but then you'd have nothing left. Better form "0" and "1".
+
+
+Solution:
+class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
+        """om=m
+        on=n
+        strs.sort(key=lambda x:len(x))
+        mx=0
+        cnt=0
+        for each in strs:
+            counter=Counter(each)    
+            if counter["0"]<=m and counter["1"]<=n:
+                m=m-counter["0"]
+                n=n-counter["1"]
+                cnt+=1
+            else:
+                continue
+            if m==0 or n==0:
+                mx=max(mx,cnt)
+                cnt=0
+                m=om
+                n=on
+            
+        return(mx)
+        """
+        ##### O(N*M*N),O(M*N)
+        dp=[[0 for i in range(n+1)] for j in range(m+1)]
+        for each in strs:
+            counter=Counter(each)
+            for i in range(m,counter["0"]-1,-1):
+                for j in range(n,counter["1"]-1,-1):
+                    dp[i][j]=max(dp[i][j],dp[i-counter["0"]][j-counter["1"]]+1)
+                    print(each,dp)
+        return dp[-1][-1]
