@@ -1,0 +1,82 @@
+Problem Statement:
+
+On an NxN chessboard, a knight starts at the r-th row and c-th column and attempts to make exactly K moves. The rows and columns are 0 indexed, so the top-left square is (0, 0), 
+and the bottom-right square is (N-1, N-1).
+A chess knight has 8 possible moves it can make, as illustrated below. Each move is two squares in a cardinal direction, then one square in an orthogonal direction.
+Each time the knight is to move, it chooses one of eight possible moves uniformly at random (even if the piece would go off the chessboard) and moves there.
+The knight continues moving until it has made exactly K moves or has moved off the chessboard. Return the probability that the knight remains on the board after it has stopped 
+moving.
+
+Example:
+Input: 3, 2, 0, 0
+Output: 0.0625
+Explanation: There are two moves (to (1,2), (2,1)) that will keep the knight on the board.
+From each of those positions, there are also two moves that will keep the knight on the board.
+The total probability the knight stays on the board is 0.0625.
+ 
+ 
+ 
+ 
+SOlution:
+
+class Solution:
+    def knightProbability(self, N: int, K: int, r: int, c: int) -> float:
+        ################ Using dfs + memoization O(K*N*N);O(N*N)
+        if K==0:
+            return 1
+        moves=[(1,2),(2,1),(-1,2),(-2,1),(-1,-2),(-2,-1),(1,-2),(2,-1)]
+        
+        def getprob(row,col):
+            temp=[]
+            for i,j in moves:
+                if 0<=i+row<N and 0<=j+col<N:
+                    dp[i+row][j+col]=0.125*dp[row][col]
+                    temp.append((i+row,j+col))
+            return temp
+        
+        dp=[[0]*N for i in range(N)]
+        dp[r][c]=1
+        
+        queue=deque([])
+        queue.extend(getprob(r,c))
+        dp[r][c]=0
+        
+        k=1
+        while queue:
+            dp2=[[0]*N for i in range(N)]
+            visited=set()
+            if k==K:
+                #print(dp)
+                return sum(map(sum,dp))
+            for i in range(len(queue)):
+                row,col=queue.popleft()
+                if (row,col) in visited:
+                    continue
+                visited.add((row,col))
+                for i,j in moves:
+                    if 0<=i+row<N and 0<=j+col<N:
+                        dp2[i+row][j+col]+=0.125*dp[row][col]
+                        queue.append((i+row,j+col))
+            k+=1
+            dp=dp2
+        return 0
+    
+        """
+        ################ Using recursion + memoization O(K*N*N);O(N*N)
+        
+        moves=[(1,2),(2,1),(-1,2),(-2,1),(-1,-2),(-2,-1),(1,-2),(2,-1)]
+        visited={}
+        def getprob(row,col,k):
+            print(visited)
+            if (row,col,k) in visited:
+                return visited[(row,col,k)]
+            if k==0:
+                return 1
+            p=0
+            for i,j in moves:
+                if 0<=i+row<N and 0<=j+col<N:
+                    p+=(1/8.)*getprob(i+row,j+col,k-1)
+            return visited.setdefault((row,col,k),p)
+            
+        return getprob(r,c,K)
+        """
