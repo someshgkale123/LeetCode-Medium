@@ -26,26 +26,15 @@ class Solution:
             return 1
         moves=[(1,2),(2,1),(-1,2),(-2,1),(-1,-2),(-2,-1),(1,-2),(2,-1)]
         
-        def getprob(row,col):
-            temp=[]
-            for i,j in moves:
-                if 0<=i+row<N and 0<=j+col<N:
-                    dp[i+row][j+col]=0.125*dp[row][col]
-                    temp.append((i+row,j+col))
-            return temp
-        
         dp=[[0]*N for i in range(N)]
         dp[r][c]=1
+        queue=deque([(r,c)])
         
-        queue=deque([])
-        queue.extend(getprob(r,c))
-        dp[r][c]=0
-        
-        k=1
         while queue:
             dp2=[[0]*N for i in range(N)]
             visited=set()
-            if k==K:
+            
+            if K==0:
                 #print(dp)
                 return sum(map(sum,dp))
             for i in range(len(queue)):
@@ -57,10 +46,9 @@ class Solution:
                     if 0<=i+row<N and 0<=j+col<N:
                         dp2[i+row][j+col]+=0.125*dp[row][col]
                         queue.append((i+row,j+col))
-            k+=1
+            K-=1
             dp=dp2
-        return 0
-    
+        return 0    
         """
         ################ Using recursion + memoization O(K*N*N);O(N*N)
         
