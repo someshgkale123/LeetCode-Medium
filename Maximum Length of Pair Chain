@@ -1,0 +1,41 @@
+Problem Statement:
+ 
+You are given n pairs of numbers. In every pair, the first number is always smaller than the second number.
+Now, we define a pair (c, d) can follow another pair (a, b) if and only if b < c. Chain of pairs can be formed in this fashion.
+Given a set of pairs, find the length longest chain which can be formed. You needn't use up all the given pairs. You can select pairs in any order.
+
+Example 1:
+Input: [[1,2], [2,3], [3,4]]
+Output: 2
+Explanation: The longest chain is [1,2] -> [3,4]
+
+
+Solution:
+class Solution:
+    def findLongestChain(self, pairs: List[List[int]]) -> int:
+        """pairs.sort(key=lambda x:x[0])
+        #### O(N*N)
+        visited=set()
+        self.mx=0
+        def dfs(index,cnt,prev):
+            if index>len(pairs):
+                return
+            if cnt>self.mx:
+                self.mx=cnt
+            for each in range(index,len(pairs)):
+                curr=pairs[each]
+                if prev[1]<curr[0]:
+                    dfs(each+1,cnt+1,curr)
+                    
+        dfs(0,0,[float("inf"),float("-inf")])
+        return self.mx
+        """
+        ######## O(NlogN);O(N)
+        prev=float("-inf")
+        mx=0
+        pairs.sort(key=lambda x:x[1])
+        for i,j in pairs:
+            if prev<i:
+                mx+=1
+                prev=j
+        return mx
