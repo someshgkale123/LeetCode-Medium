@@ -1,0 +1,57 @@
+Problem Statement:
+
+Given a list of lists of integers, nums, return all elements of nums in diagonal order as shown in the below images.
+
+Example 1:
+Input: nums = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [1,4,2,7,5,3,8,6,9]
+
+Example 2:
+Input: nums = [[1,2,3,4,5],[6,7],[8],[9,10,11],[12,13,14,15,16]]
+Output: [1,6,2,8,7,3,9,4,12,10,5,13,11,14,15,16]
+
+Example 3:
+Input: nums = [[1,2,3],[4],[5,6,7],[8],[9,10,11]]
+Output: [1,4,2,5,3,8,6,9,7,10,11]
+
+Example 4:
+Input: nums = [[1,2,3,4,5,6]]
+Output: [1,2,3,4,5,6]
+
+
+Solution:
+class Solution:
+    def findDiagonalOrder(self, nums: List[List[int]]) -> List[int]:
+        """
+        ####### BFS
+        li=[]
+        queue=[(0,0)]
+        visited=set()
+        while queue:
+            #print(queue)
+            #print(visited)
+            for each in range(len(queue)):
+                row,col=queue.pop(0)
+                if (row,col) in visited:
+                    continue
+                visited.add((row,col))
+                for r,c in [(1,0),(0,1)]:
+                    if row+r< len(nums) and row+r<=len(nums[row+r]):
+                        print(row+r,col)
+                        queue.append((row+r,col))
+                    if col+c<=len(nums[row]):
+                        print(row,col+c)
+                        queue.append((row,col+c))
+                    
+        return(li)
+        """
+        ####### using map, map[i+j]=nums[i][j] | O(N*N);O(N)
+        index={}
+        for i in range(len(nums)-1,-1,-1):
+            for j in range(len(nums[i])):
+                index[i+j]=index.get(i+j,[])+[nums[i][j]]
+        #print(index)
+        li=[]
+        for i in range(len(index)):
+            li.extend(index[i])
+        return li
