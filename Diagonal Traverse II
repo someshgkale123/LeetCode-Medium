@@ -45,7 +45,7 @@ class Solution:
                     
         return(li)
         """
-        ####### using map, map[i+j]=nums[i][j] | O(N*N);O(N)
+        ####### using map, map[i+j]=nums[i][j] | O(N*N);O(N*N)
         index={}
         for i in range(len(nums)-1,-1,-1):
             for j in range(len(nums[i])):
