@@ -1,0 +1,82 @@
+Problem Statement:
+
+You have n  tiles, where each tile has one letter tiles[i] printed on it.
+Return the number of possible non-empty sequences of letters you can make using the letters printed on those tiles.
+
+Example 1:
+Input: tiles = "AAB"
+Output: 8
+Explanation: The possible sequences are "A", "B", "AA", "AB", "BA", "AAB", "ABA", "BAA".
+
+Example 2:
+Input: tiles = "AAABBC"
+Output: 188
+
+Example 3:
+Input: tiles = "V"
+Output: 1
+ 
+
+Solution:
+class Solution:
+    def numTilePossibilities(self, tiles: str) -> int:
+        ######## O(2^N);O(N)
+        
+        ####### initailise list of tile and count of each tile
+        string=[]
+        counts=[]
+        for i in list(tiles):
+            string.append(i)
+            counts.append(1)
+        
+        
+        self.cnt=0
+        visited={}
+        ####### This function gets the tile possibility
+        def getperm(string,counts,index,temp,level):
+          #print(string,counts,temp)
+            ##### storing the possibility in sorted order
+            ans="".join(sorted(temp))
+            if ans:
+                visited[ans]=len(ans)
+            for i in range(index,len(temp)):
+                if counts[i]==0:
+                    continue
+                temp[level]=string[i]
+                #print(temp)
+                counts[i]-=1
+                getperm(string,counts,i,temp,level+1)
+                temp[level]=""
+                counts[i]+=1
+
+
+        getperm(string,counts,0,["" for i in range(len(tiles))],0)
+        total=0
+        ###### calculate the permutation of tiles for different lengths by totallentgh!/duplicatecount! i.e. for AABC = 4!/2!
+        for i,j in visited.items():
+            counter=collections.Counter(i)
+            temp=1
+            for value,count in counter.items():
+                if count>1:
+                    temp*=math.factorial(count)
+            ans=math.factorial(j)/temp
+            total+=ans
+        return int(total)
+        
+        """
+        ######### O(N!);O(N)
+        paths=set()
+        def getposs(path,temp):
+            if "".join(path) not in paths:
+                paths.add("".join(path))
+            for i,j in enumerate(temp):
+                if j:
+                    continue
+                path.append(tiles[i])
+                temp[i]=True
+                getposs(path,temp)
+                temp[i]=False
+                path.pop()
+        getposs([],[False for i in range(len(tiles))])
+        return len(paths)-1
+        """
