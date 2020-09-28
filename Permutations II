@@ -1,0 +1,50 @@
+Problem Statement:
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+Example:
+
+Input: [1,1,2]
+Output:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+
+
+
+Solution:
+        """
+        ans=[]
+        visited=[1]*len(nums)
+        def getpermutation(visited,temp):
+            if len(temp)==len(nums):
+                if temp not in ans:
+                    ans.append(temp)
+                return
+            for each in range(len(nums)):
+                if visited[each]==0:
+                    continue
+                visited[each]=0
+                getpermutation(visited,temp+[nums[each]])
+                visited[each]=1
+                
+        getpermutation(visited,[])
+        return(ans)
+        """
+        ### Using counter to keep track of repeated numbers 
+        counter=collections.Counter(nums)
+        ans=[]
+        def dfs(index,temp):
+            if len(temp)==len(nums):
+                ans.append(temp)
+                return
+            for each in counter:
+                if counter[each]==0:
+                    continue
+                counter[each]-=1
+                dfs(each,temp+[each])
+                counter[each]+=1
+                
+        dfs(0,[])
+        return ans
