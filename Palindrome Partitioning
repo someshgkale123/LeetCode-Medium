@@ -15,7 +15,7 @@ Output:
 
 Solution:
 class Solution:
-    ###### O(N^N); O(N^N)
+    ###### O(N.2^N); O(N)
     def partition(self, s: str) -> List[List[str]]:
         ans=[]
         def getpalin(start,temp):
