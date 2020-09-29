@@ -1,0 +1,33 @@
+Problem Statement:
+
+Given a string s, partition s such that every substring of the partition is a palindrome.
+Return all possible palindrome partitioning of s.
+
+Example:
+Input: "aab"
+Output:
+[
+  ["aa","b"],
+  ["a","a","b"]
+]
+
+
+
+Solution:
+class Solution:
+    ###### O(N^N); O(N^N)
+    def partition(self, s: str) -> List[List[str]]:
+        ans=[]
+        def getpalin(start,temp):
+            if start==len(s):
+                ans.append(temp)
+                return
+            # slicing combinations from start to end i.e. 0:1, 0:2, 0:3 etc.
+            for end in range(start+1,len(s)+1):
+                curr=s[start:end]
+                # if not palindrome, pick another combination
+                if curr!=curr[::-1]:
+                    continue
+                getpalin(end,temp+[curr])
+        getpalin(0,[])
+        return ans
