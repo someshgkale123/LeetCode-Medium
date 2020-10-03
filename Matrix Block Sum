@@ -1,0 +1,61 @@
+Problem Statement:
+
+Given a m * n matrix mat and an integer K, return a matrix answer where each answer[i][j] is the sum of all elements mat[r][c] for i - K <= r <= i + K, j - K <= c <= j + K, and (r, c) is a valid position in the matrix.
+ 
+Example 1:
+Input: mat = [[1,2,3],[4,5,6],[7,8,9]], K = 1
+Output: [[12,21,16],[27,45,33],[24,39,28]]
+
+Example 2:
+Input: mat = [[1,2,3],[4,5,6],[7,8,9]], K = 2
+Output: [[45,45,45],[45,45,45],[45,45,45]]
+
+
+Solution:
+class Solution:
+    def matrixBlockSum(self, mat: List[List[int]], K: int) -> List[List[int]]:
+        """
+        ### Using bfs but TLE O(mnk);O(mn)
+        neighbors=[(1,0),(0,1),(-1,0),(0,-1),(1,1),(-1,-1),(-1,1),(1,-1)]
+        dp=[[0 for i in range(len(mat[0]))] for i in range(len(mat))]
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+                queue=[(i,j)]
+                visited=set()
+                sm=0
+                k=-1
+                while queue:
+                    if k==K:
+                        #print(sm)
+                        break
+                    for each in range(len(queue)):
+                        row,col=queue.pop(0)
+                        if (row,col) in visited:
+                            continue
+                        visited.add((row,col))
+                        sm+=mat[row][col]
+                        for r,c in neighbors:
+                            if 0<=row+r<len(mat) and 0<=col+c<len(mat[0]):
+                                queue.append((row+r,col+c))
+                    k+=1
+                dp[i][j]=sm
+        return dp
+        """
+        ## O(mn);O(mn)
+        prefix=[[0 for i in range(len(mat[0])+1)] for i in range(len(mat)+1)]
+        # generate prefix sum of elements in matrix
+        for i in range(1,len(prefix)):
+            for j in range(1,len(prefix[0])):
+                prefix[i][j]=(mat[i-1][j-1]+prefix[i-1][j]+prefix[i][j-1])-prefix[i-1][j-1]
+        
+        # iterate over the prefix sum matrix and get the desired block sum by removing the upper or left blocks in the matrix
+        ans=[[0 for i in range(len(mat[0]))] for i in range(len(mat))]
+        for i in range(len(ans)):
+            for j in range(len(ans[0])):
+                r1=max(0,i-K)
+                c1=max(0,j-K)
+                r2=min(len(mat)-1,i+K)
+                c2=min(len(mat[0])-1,j+K)
+                
+                ans[i][j]=(prefix[r2+1][c2+1]-prefix[r1][c2+1]-prefix[r2+1][c1])+prefix[r1][c1]
+        return ans
