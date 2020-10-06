@@ -1,0 +1,51 @@
+Problem Statement:
+
+Given an array of integers nums and a positive integer k, find whether it's possible to divide this array into k non-empty subsets whose sums are all equal.
+
+Example 1:
+Input: nums = [4, 3, 2, 3, 5, 2, 1], k = 4
+Output: True
+Explanation: It's possible to divide it into 4 subsets (5), (1, 4), (2,3), (2,3) with equal sums.
+
+
+
+Solution:
+class Solution:
+    def canPartitionKSubsets(self, nums: List[int], k: int) -> bool:
+        ### Time grows with the input and depends on subsetsum, space: O(N)
+        total=sum(nums)
+        
+        # if k==0 or full partition is not possible return False i.e. if the number is floating point
+        if k==0 or total%k!=0:
+            return False
+        
+        subsetsum=int(total/k)
+        def getsubset(index,sm,k,visited):
+            # if all buckets are used return True
+            if k==1:
+                return True
+                
+            # if curr sum is greater than subsetsum, return False and pick smaller element
+            if sm>subsetsum:
+                return False
+                
+            # if curr sum equals to subsetsum, reduce the bucket size and fill another bucket
+            if sm==subsetsum:
+                return getsubset(0,0,k-1,visited)
+            
+            # iterating from curr element to the right of element
+            for i in range(index,len(nums)):
+                
+                # if index already picked by another bucket, look for another index
+                if i in visited:
+                    continue
+                
+                # if index available, add index to visited
+                visited.add(i)
+                
+                # check if adding this current element form the subsetsum, return true if possible otherwise remove the element from visited and pick another
+                if getsubset(i+1,sm+nums[i],k,visited):
+                    return True
+                visited.remove(i)
+            
+        return getsubset(0,0,k,set())
