@@ -1,0 +1,74 @@
+Problem Statement:
+
+
+Given an array A of integers, return the length of the longest arithmetic subsequence in A.
+Recall that a subsequence of A is a list A[i_1], A[i_2], ..., A[i_k] with 0 <= i_1 < i_2 < ... < i_k <= A.length - 1, and that a sequence B is arithmetic if B[i+1] - B[i] are 
+all the same value (for 0 <= i < B.length - 1).
+
+ 
+Example 1:
+Input: A = [3,6,9,12]
+Output: 4
+Explanation: 
+The whole array is an arithmetic sequence with steps of length = 3.
+
+Example 2:
+Input: A = [9,4,7,2,10]
+Output: 3
+Explanation: 
+The longest arithmetic subsequence is [4,7,10].
+
+Example 3:
+Input: A = [20,1,15,3,10,5,8]
+Output: 4
+Explanation: 
+The longest arithmetic subsequence is [20,15,10,5].
+
+
+
+Solution:
+class Solution:
+    def longestArithSeqLength(self, A: List[int]) -> int:
+        """
+        ##### Recursive + memoization approach, getting all possible pairs 
+        self.mx=0
+        visited={}
+        def getseq(index,prev,temp,diff,cnt):
+            #print(index,prev,temp,diff)
+            if index>=len(A) or temp in visited:
+                return
+            for i in range(index+1,len(A)):
+                currdiff=A[i]-prev
+                if currdiff==diff:
+                    getseq(i,A[i],temp+"#"+str(A[i]),diff,cnt+1)
+                else:
+                    getseq(i,A[i],str(A[i]) if not temp else str(prev)+"#"+str(A[i]),currdiff,1 if not temp else 2)
+            visited[temp]=cnt
+            self.mx=max(self.mx,cnt)
+            
+        getseq(-1,0,"",0,0)
+        #print(visited)
+        return self.mx"""
+        
+        ######## Iterative DP approach, O(N^2);O(N^2)
+        # for storing possible pairs
+        visited={}
+        for i in range(1,len(A)):
+            # iterating from start of the array till current element and looking for possible pairs
+            for j in range(i):
+                
+                # storing diff 
+                diff=A[i]-A[j]
+                
+                # if the element at j holds the same diff as previous stored value 
+                if (j,diff) in visited:
+                    
+                    # this means the element contains the pair, so add 1 to previous pair
+                    visited[(i,diff)]=visited[(j,diff)]+1
+                else:
+                    
+                    # If not store the current diff at ith position(2 means both previous element and current element form a new pair)
+                    visited[(i,diff)]=2
+        
+        # return maximum length of arithemetic subsequence
+        return (max(visited.values()))
