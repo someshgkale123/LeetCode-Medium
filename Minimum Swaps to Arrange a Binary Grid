@@ -1,0 +1,80 @@
+Problem Statement:
+
+Given an n x n binary grid, in one step you can choose two adjacent rows of the grid and swap them.
+A grid is said to be valid if all the cells above the main diagonal are zeros.
+Return the minimum number of steps needed to make the grid valid, or -1 if the grid cannot be valid.
+The main diagonal of a grid is the diagonal that starts at cell (1, 1) and ends at cell (n, n).
+
+Example 1:
+Input: grid = [[0,0,1],[1,1,0],[1,0,0]]
+Output: 3
+
+Example 2:
+Input: grid = [[0,1,1,0],[0,1,1,0],[0,1,1,0],[0,1,1,0]]
+Output: -1
+Explanation: All rows are similar, swaps have no effect on the grid.
+
+Example 3:
+Input: grid = [[1,0,0],[1,1,0],[1,1,1]]
+Output: 0
+
+
+SOlution:
+
+class Solution:
+    def minSwaps(self, grid: List[List[int]]) -> int:
+        
+        ############ O(N^N); O(N)
+        # Converting 2d array problem to 1d array
+        
+        # initialize zeros list, which will include each rows count of consecutive zeros from right to left
+        zeros=[]
+        for each in range(len(grid)):
+            temp=0
+            for end in range(len(grid[0])-1,-1,-1):
+                if grid[each][end]==0:
+                    temp+=1
+                else:
+                    break
+            zeros.append(temp)
+       
+        # initialize count i.e swaps 
+        cnt=0
+        
+        # currentzero is the required zeros at index 
+        currentzero=len(grid)-1
+        index=0
+        while index<=len(grid)-1:
+            temp=zeros[index]
+            
+            # check if zeros[index] is greater or equal to required or currentzero, if it is mark it as visited (-1) and increment count
+            if temp>=currentzero:
+                zeros[index]=-1
+                index+=1
+            
+            else:
+                # if above condition fails, look for nearest on right which is greater or equal to currentzero
+                flag=False
+                for each in range(index,len(zeros)):
+                    
+                    # if the current element already visited in previous operation continue
+                    if zeros[each]==-1:
+                        continue
+                    
+                    # if found, mark as visited and mark flag as visited
+                    if zeros[each]>=currentzero:
+                        zeros[each]=-1
+                        flag=True
+                        break
+                    else:
+                        
+                        # increment count and look for another element on right which satisfies the above condition
+                        cnt+=1
+                
+                # check if we found the element on right, if not return -1 (not possible to satisfy the problem statement)
+                if not flag:
+                    return -1
+                
+            # Otherwise decrement currentzero
+            currentzero-=1
+        return cnt
