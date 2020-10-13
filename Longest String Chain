@@ -1,0 +1,88 @@
+Problem Statement:
+
+Given a list of words, each word consists of English lowercase letters.
+Let's say word1 is a predecessor of word2 if and only if we can add exactly one letter anywhere in word1 to make it equal to word2.  For example, "abc" is a predecessor of "abac".
+A word chain is a sequence of words [word_1, word_2, ..., word_k] with k >= 1, where word_1 is a predecessor of word_2, word_2 is a predecessor of word_3, and so on.
+Return the longest possible length of a word chain with words chosen from the given list of words.
+
+Example 1:
+Input: ["a","b","ba","bca","bda","bdca"]
+Output: 4
+Explanation: one of the longest word chain is "a","ba","bda","bdca".
+
+
+
+SOlution:
+class Solution:
+    def longestStrChain(self, words: List[str]) -> int:
+        """
+        
+        print(words)
+        n=0
+        mx=0
+        while n<=len(words)-1:
+            dp=[0]*len(words)
+            prev=Counter(words[n])
+            indx=n
+            dp[n]=1
+            for each in range(n+1,len(words)):
+                curr=""
+                for letter in words[each]:
+                    #print(dp)
+                    if letter in prev:
+                        prev[letter]-=1
+                        if prev[letter]==0:
+                            del prev[letter]
+                    else:
+                        curr+=letter
+                if not prev and len(curr)==1:
+                    dp[each]=max(dp[indx],dp[indx]+1)
+                    prev=Counter(words[each])
+                    indx=each
+                else:
+                    dp[each]=dp[each-1]
+                    prev=Counter(words[indx])
+                
+            print(words[n],dp)
+            mx=max(mx,dp[-1])
+            n+=1
+        return mx"""
+        
+        ####### O(N^2*L);O(N)
+        def getdiff(prev,curr):
+            diff=0
+            i,j=0,0
+            while i<len(prev) and j<len(curr):
+                if prev[i]==curr[j]:
+                    i+=1
+                    j+=1
+                else:
+                    j+=1
+                    diff+=1
+                    if diff>1:
+                        return 2
+            return diff
+        
+        words.sort(key=lambda x:len(x))
+        
+        # print(words)
+        visited={}
+        self.mx=1
+        def getchain(index,cnt,prev):
+            self.mx=max(self.mx,cnt)
+            if index>=len(words):
+                return
+            # print(temp)
+            
+            for each in range(index,len(words)):
+                if words[each] in visited and visited[words[each]]>=cnt:
+                    continue
+                diff=getdiff(prev,words[each])
+                if prev and (len(prev)==len(words[each]) or diff>1):
+                    continue
+                else:
+                    getchain(each+1,cnt+1,words[each])
+                
+                visited[words[each]]=cnt
+        getchain(0,0,"")
+        return self.mx
