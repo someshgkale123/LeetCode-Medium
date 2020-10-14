@@ -1,0 +1,75 @@
+Problem Statement:
+ 
+We partition a row of numbers A into at most K adjacent (non-empty) groups, then our score is the sum of the average of each group. What is the largest score we can achieve?
+Note that our partition must use every number in A, and that scores are not necessarily integers.
+
+Example:
+Input: 
+A = [9,1,2,3,9]
+K = 3
+Output: 20
+Explanation: 
+The best choice is to partition A into [9], [1, 2, 3], [9]. The answer is 9 + (1 + 2 + 3) / 3 + 9 = 20.
+We could have also partitioned A into [9, 1], [2], [3, 9], for example.
+That partition would lead to a score of 5 + 2 + 6 = 13, which is worse.
+
+
+
+Solution:
+class Solution:
+    def largestSumOfAverages(self, A: List[int], K: int) -> float:
+        ############ O(N^2*K);O(N)
+        
+        visited={}
+        
+        # If K==1 then there is only one group
+        if K==1:
+            return sum(A)/len(A)
+        
+        # If K is greater or equal to len(A) then K groups are not possible, return sum(A)
+        if K>=len(A):
+            return sum(A)
+        
+        # Get prefixsum to find sums in different ranges
+        prefixsum=[A[0]]
+        for each in range(1,len(A)):
+            prefixsum.append(prefixsum[-1]+A[each])
+        #print(prefixsum)
+        
+        def getgroups(index,K):
+            # check if this pattern was visited or not
+            if (index,K) in visited:
+                return visited[(index,K)]
+            
+            # if all elements are visited return 0
+            if index>=len(A):
+                return 0
+            
+            # if only one group is remaining, return prefixsum of all elements to the right
+            if K==1:
+                endprefix=(prefixsum[len(A)-1]-prefixsum[index-1])
+                endprefix/=len(A)-index
+                return endprefix
+            
+            ans=0
+            # iterating on elements on right
+            for i in range(index+1,len(A)+1):
+                
+                # if its the first group, compute prefixsum of first i elements and recurse on right half
+                if index==0:
+                    ans=max(ans,prefixsum[i-1]/i + getgroups(i,K-1))
+                else:
+                    
+                    # Get prefixsum of range (i-1,index-1)
+                    curr=(prefixsum[i-1]-prefixsum[index-1])
+                    curr/=i-index
+                    
+                    # keep maximum count between different subgroup sum
+                    ans=max(ans,curr+getgroups(i,K-1))
+                    
+            # mark subgroup sum
+            visited[(index,K)]=ans
+            return visited[(index,K)]
+        
+        return getgroups(0,K)
+ 
