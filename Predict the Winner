@@ -1,0 +1,53 @@
+Problem Statement:
+
+Given an array of scores that are non-negative integers. Player 1 picks one of the numbers from either end of the array followed by the player 2 and then player 1 and so on. Each time a player picks a number, that number will not be available for the next player. This continues until all the scores have been chosen. The player with the maximum score wins.
+Given an array of scores, predict whether player 1 is the winner. You can assume each player plays to maximize his score.
+
+Example 1:
+Input: [1, 5, 2]
+Output: False
+Explanation: Initially, player 1 can choose between 1 and 2. 
+If he chooses 2 (or 1), then player 2 can choose from 1 (or 2) and 5. If player 2 chooses 5, then player 1 will be left with 1 (or 2). 
+So, final score of player 1 is 1 + 2 = 3, and player 2 is 5. 
+Hence, player 1 will never be the winner and you need to return False.
+ 
+
+Example 2:
+Input: [1, 5, 233, 7]
+Output: True
+Explanation: Player 1 first chooses 1. Then player 2 have to choose between 5 and 7. No matter which number player 2 choose, player 1 can choose 233.
+Finally, player 1 has more score (234) than player 2 (12), so you need to return True representing player1 can win.
+
+
+
+SOlution:
+
+ class Solution:
+    def PredictTheWinner(self, nums: List[int]) -> bool:
+        ##### Time: less than O(2^N) i.e O(N^2); recursion with memoization
+        ##### Space: O(N^2)
+        
+        # Store the visited pattern with its score
+        visited={}
+        def getscore(nums,total):
+            #print(nums,total)
+            
+            # if pattern already visited, return the score computed 
+            if (tuple(nums),total) in visited:
+                return visited[(tuple(nums),total)]
+            
+            # if only two elements remained, return max one
+            if len(nums)<=2:
+                return max(nums)
+            
+            # choice1 is picking first element and choice2 is picking last element (opponents choices)
+            choice1=getscore(nums[1:],total-nums[0])
+            choice2=getscore(nums[:-1],total-nums[-1])
+            
+            # compute player1 score by substracting opponent score with total and mark as visited
+            visited[(tuple(nums),total)]=max(total-choice1,total-choice2)
+            return visited[(tuple(nums),total)]
+        
+        player1=getscore(nums,sum(nums))
+        print(visited)
+        return player1>=sum(nums)-player1
