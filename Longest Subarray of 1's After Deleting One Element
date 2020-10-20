@@ -1,0 +1,80 @@
+Problem Statement:
+
+Given a binary array nums, you should delete one element from it.
+Return the size of the longest non-empty subarray containing only 1's in the resulting array.
+Return 0 if there is no such subarray.
+
+Example 1:
+Input: nums = [1,1,0,1]
+Output: 3
+Explanation: After deleting the number in position 2, [1,1,1] contains 3 numbers with value of 1's.
+
+Example 2:
+Input: nums = [0,1,1,1,0,1,1,0,1]
+Output: 5
+Explanation: After deleting the number in position 4, [0,1,1,1,1,1,0,1] longest subarray with value of 1's is [1,1,1,1,1].
+
+Example 3:
+Input: nums = [1,1,1]
+Output: 2
+Explanation: You must delete one element.
+
+Example 4:
+Input: nums = [1,1,0,0,1,1,1,0,1]
+Output: 4
+
+Example 5:
+Input: nums = [0,0,0]
+Output: 0
+
+
+Solution:
+class Solution:
+    def longestSubarray(self, nums: List[int]) -> int:
+        """
+        ### Sliding window approach, O(N); O(1)
+        left=0
+        cnt=0
+        mx=0
+        zeros=0
+        for i in range(len(nums)):
+            if nums[i]==0:
+                zeros+=1
+            elif nums[i]==1:
+                cnt+=1
+            while zeros>1:
+                if nums[left]==0:
+                    zeros-=1
+                else:
+                    cnt-=1
+                left+=1
+            mx=max(mx,cnt)
+            
+        if mx==len(nums):
+            return mx-1
+        return mx
+        
+        """
+        #### Dynamic Programming approach O(N);O(N) can be reduced to O(1) constant space
+        mx=0
+        dp=[0]*len(nums)
+        zeros=None
+        if nums[0]==1:
+            dp[0]=1
+        else:
+            zeros=0
+        for i in range(1,len(nums)):
+            if nums[i]==1:
+                dp[i]=dp[i-1]+1
+            else:
+                temp=0
+                if zeros:
+                    temp=dp[i-1]-dp[zeros]
+                else:
+                    temp=dp[i-1]
+                zeros=i
+                dp[i]=temp
+            mx=max(dp[i],mx)
+        if mx==len(nums):
+            return mx-1
+        return mx
