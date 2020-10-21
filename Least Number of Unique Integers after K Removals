@@ -1,0 +1,55 @@
+Problem Statement:
+
+Given an array of integers arr and an integer k. Find the least number of unique integers after removing exactly k elements.
+
+Example 1:
+Input: arr = [5,5,4], k = 1
+Output: 1
+Explanation: Remove the single 4, only 5 is left.
+Example 2:
+Input: arr = [4,3,1,1,3,3,2], k = 3
+Output: 2
+Explanation: Remove 4, 2 and either one of the two 1s or three 3s. 1 and 3 will be left.
+
+
+Solution:
+class Solution:
+    def findLeastNumOfUniqueInts(self, arr: List[int], k: int) -> int:
+        """
+        ##### O(nk);O(n) TLE
+        freq={}
+        for i in range(len(arr)):
+            freq[arr[i]]=freq.get(arr[i],0)+1
+        
+        removed=0
+        while k:
+            # print(freq)
+            mn=min(freq.values())
+            for i,j in freq.items():
+                if j==mn:
+                    k-=1
+                    freq[i]-=1
+                    if freq[i]==0:
+                        removed+=1
+                        freq[i]=float("inf")
+                    break
+        return len(freq)-removed
+        """
+        ####### O(klogn);O(n)
+        freq={}
+        for i in range(len(arr)):
+            freq[arr[i]]=freq.get(arr[i],0)+1
+        heap=([])
+        for i,j in freq.items():
+            heappush(heap,(j,i))
+        while k:
+            # print(heap)
+            value,elem=heappop(heap)
+            k-=1
+            if value-1==0:
+                continue
+            heappush(heap,(value-1,elem))
+
+        return len(heap)
+
+        
