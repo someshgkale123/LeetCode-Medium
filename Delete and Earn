@@ -1,0 +1,97 @@
+Problem Statement:
+
+Given an array nums of integers, you can perform operations on the array.
+In each operation, you pick any nums[i] and delete it to earn nums[i] points. After, you must delete every element equal to nums[i] - 1 or nums[i] + 1.
+You start with 0 points. Return the maximum number of points you can earn by applying such operations.
+
+Example 1:
+Input: nums = [3, 4, 2]
+Output: 6
+Explanation: 
+Delete 4 to earn 4 points, consequently 3 is also deleted.
+Then, delete 2 to earn 2 points. 6 total points are earned.
+ 
+Example 2:
+Input: nums = [2, 2, 3, 3, 3, 4]
+Output: 9
+Explanation: 
+Delete 3 to earn 3 points, deleting both 2's and the 4.
+Then, delete 3 again to earn 3 points, and 3 again to earn 3 points.
+9 total points are earned.
+
+
+Solution:
+class Solution:
+    def deleteAndEarn(self, nums: List[int]) -> int:
+        ###### O(N);O(N)
+        if not nums:
+            return 0
+        dp=[0]*(max(nums)+1)
+        freq=[0]*(max(nums)+1)
+        for num in nums:
+            freq[num]+=1
+        mx=0
+        if freq[1]!=0:
+            dp[1]=freq[1]
+            mx=dp[1]
+            
+        for i in range(2,len(dp)):
+            if freq[i]:
+                dp[i]=max(dp[i-1],freq[i]*i+dp[i-2])
+            else:
+                dp[i]=dp[i-1]
+            mx=max(mx,dp[i])
+        
+        return mx
+        """
+        #### Using recursion
+        elemsum={}
+        for i in nums:
+            elemsum[i]=elemsum.get(i,0)+i
+        
+        visited=
+        self.mx=0
+        
+        def getmax(total,picksum):
+            # print(elemsum)
+            if (total,picksum) in visited:
+                return
+            if total==0:
+                self.mx=max(self.mx,picksum)
+                return
+            for each in (elemsum):
+                if elemsum[each]==0:
+                    continue
+                
+                value=elemsum[each]
+                elemsum[each]=0
+                temp=total-value
+                picks=value
+                prev=None
+                next=None
+                if each-1 in elemsum and elemsum[each-1]>0:
+
+                    temp-=elemsum[each-1]
+                    prev=elemsum[each-1]
+                    elemsum[each-1]=0
+                    
+                if each+1 in elemsum and elemsum[each+1]>0:
+                    
+                    temp-=elemsum[each+1]
+                    next = elemsum[each+1]
+                    elemsum[each+1]=0
+                    
+                getmax(temp,picks+picksum)
+                visited.add((total,picksum))
+                elemsum[each]=value
+                if prev:
+                    
+                    elemsum[each-1]=prev
+                if next:
+                    
+                    elemsum[each+1]=next
+                    
+        getmax(sum(nums),0)
+        return self.mx  
+        """      
+        
