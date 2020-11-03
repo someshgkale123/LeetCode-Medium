@@ -1,0 +1,82 @@
+Problem Statement:
+
+Given an array of integers, return the maximum sum for a non-empty subarray (contiguous elements) with at most one element deletion. In other words, you want to choose a subarray and optionally delete one element from it so that there is still at least one element left and the sum of the remaining elements is maximum possible.
+Note that the subarray needs to be non-empty after deleting one element.
+
+Example 1:
+Input: arr = [1,-2,0,3]
+Output: 4
+Explanation: Because we can choose [1, -2, 0, 3] and drop -2, thus the subarray [1, 0, 3] becomes the maximum value.
+
+Example 2:
+Input: arr = [1,-2,-2,3]
+Output: 3
+Explanation: We just choose [3] and it's the maximum sum.
+
+Example 3:
+Input: arr = [-1,-1,-1,-1]
+Output: -1
+Explanation: The final subarray needs to be non-empty. You can't choose [-1] and delete -1 from it, then get an empty subarray to make the sum equals to 0.
+
+
+Solution:
+class Solution:
+    def maximumSum(self, arr: List[int]) -> int:
+        
+        """
+        #### O(N^2); O(1)
+        mx=float("-inf")
+        for i in range(len(arr)):
+            prevsum=0
+            nextsum=0
+            for prev in range(0,i):
+                prevsum=max(arr[prev],arr[prev]+prevsum)
+            
+            for next in range(len(arr)-1,i,-1):
+                nextsum=max(arr[next],arr[next]+nextsum)
+                
+            if prevsum!=0:
+                mx=max(mx,prevsum)
+            if nextsum!=0:
+                mx=max(mx,nextsum)
+            if prevsum!=0 and nextsum!=0:
+                mx=max(mx,prevsum+nextsum)
+        
+        return max(mx,max(arr))
+        """
+        
+        """
+        #### O(N);O(N) Kadane's algorithm
+        mx=float("-inf")
+        with_delete=[float("-inf")]*len(arr)
+        without_delete=[float("-inf")]*len(arr)
+        if len(arr)==1:
+            return arr[0]
+        with_delete[0]=arr[0]
+        without_delete[0]=arr[0]
+        
+        for each in range(1,len(arr)):
+            without_delete[each]=max(arr[each],without_delete[each-1]+arr[each])
+            with_delete[each]=max(without_delete[each-1],with_delete[each-1]+arr[each])
+            
+            mx=max(mx,with_delete[each],without_delete[each])
+        
+        return mx
+        """
+        
+        #### O(N);O(1) Kadane's algorithm
+        mx=float("-inf")
+        with_delete=arr[0]
+        without_delete=arr[0]
+        
+        if len(arr)==1:
+            return arr[0]
+      
+        for each in range(1,len(arr)):
+            temp=without_delete
+            without_delete=max(arr[each],without_delete+arr[each])
+            with_delete=max(temp,with_delete+arr[each])
+            
+            mx=max(mx,with_delete,without_delete)
+            
+        return mx
