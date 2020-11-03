@@ -1,0 +1,53 @@
+Problem Statement:
+
+Given two arrays A and B of equal size, the advantage of A with respect to B is the number of indices i for which A[i] > B[i].
+Return any permutation of A that maximizes its advantage with respect to B.
+
+Example 1:
+Input: A = [2,7,11,15], B = [1,10,4,11]
+Output: [2,11,7,15]
+
+Example 2:
+Input: A = [12,24,8,32], B = [13,25,32,11]
+Output: [24,32,8,12]
+
+
+
+Solution:
+class Solution:
+    def advantageCount(self, A: List[int], B: List[int]) -> List[int]:
+        
+        ####### O(NlogN);O(N)
+        
+        # sorting both arrays
+        a=sorted(A)
+        b=sorted(B)
+        
+        # initialize the pointer at b
+        j=0
+        
+        notpicked=[]
+        picked=defaultdict(list)
+        
+        # for each element in a, look for element viz. greater than b element at j
+        for each in a:
+            
+            # if greater, the element can be used to beat b's element at j and increment j
+            if each>b[j]:
+                picked[b[j]].append(each)
+                j+=1
+            
+            # else, cannot be used to beat b, keep in notpicked array
+            else:
+                notpicked.append(each)
+        # print(notpicked)
+        # print(picked)
+        
+        #for each element in b, map the elements from picked that can beat b
+        ans=[]
+        for each in B:
+            if picked[each]:
+                ans.append(picked[each].pop())
+            else:
+                ans.append(notpicked.pop())
+        return ans
