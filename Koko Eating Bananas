@@ -1,0 +1,62 @@
+Problem Statement:
+
+
+Koko loves to eat bananas.  There are N piles of bananas, the i-th pile has piles[i] bananas.  The guards have gone and will come back in H hours.
+Koko can decide her bananas-per-hour eating speed of K.  Each hour, she chooses some pile of bananas, and eats K bananas from that pile.  If the pile has less than K bananas, she eats all of them instead, and won't eat any more bananas during this hour.
+Koko likes to eat slowly, but still wants to finish eating all the bananas before the guards come back.
+Return the minimum integer K such that she can eat all the bananas within H hours.
+
+Example 1:
+Input: piles = [3,6,7,11], H = 8
+Output: 4
+
+Example 2:
+Input: piles = [30,11,23,4,20], H = 5
+Output: 30
+
+Example 3:
+Input: piles = [30,11,23,4,20], H = 6
+Output: 23
+
+
+
+Solution:
+class Solution:
+    def minEatingSpeed(self, piles: List[int], H: int) -> int:
+        
+        #### O(NlogM); O(1)
+        
+        # set low to min bananas koko can eat in a hour to 1 and high to maximum from piles
+        low=1
+        high=max(piles)
+        
+        def gethours(speed):
+            totalhours=0
+            for each in piles:
+                # if current pile is less than speed, koko will take 1 hour to eat
+                if each<=speed:
+                    totalhours+=1
+                else:
+                    
+                    # else, calculate hours by dividing the current pile by speed and checking if pile is empty or not
+                    reqhours=each//speed
+                    totalhours+=reqhours
+                    if (each%speed)!=0:
+                        totalhours+=1
+            return totalhours
+                    
+        
+        while low<=high:
+            
+            # get middle speed
+            mid=(low+high)//2
+            totalhours=gethours(mid) 
+           
+            # if totalhours to eat bananas is less than required hours, pick lesser speed and if equal look for optimal on right half
+            if totalhours<=H:
+                high=mid-1
+                
+            # if totalhours to eat bananas is greater, pick higher speed
+            else:
+                low=mid+1
+        return low
