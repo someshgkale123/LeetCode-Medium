@@ -17,7 +17,24 @@ return 13.
 Solution:
 class Solution:
     def kthSmallest(self, matrix: List[List[int]], k: int) -> int:
+        """
+        ##### O(n^2logn^2)
         li=list(set())
         for i in matrix:
             li.extend(i)
         return sorted(li)[k-1]
+        """
+        
+        ###### O(N+KlogN)
+        heap=[]
+        
+        for each in range(len(matrix)):
+            heappush(heap,(matrix[each][0],0,each))
+            
+        while k-1:
+            value,i,j=heappop(heap)
+            if i+1<len(matrix):
+                heappush(heap,(matrix[j][i+1],i+1,j))
+            k-=1
+        return heap[0][0]
+        
