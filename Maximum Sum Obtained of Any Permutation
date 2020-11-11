@@ -1,0 +1,77 @@
+Problem Statement:
+
+We have an array of integers, nums, and an array of requests where requests[i] = [starti, endi]. The ith request asks for the sum of nums[starti] + nums[starti + 1] + ... + nums[endi - 1] + nums[endi]. Both starti and endi are 0-indexed.
+Return the maximum total sum of all requests among all permutations of nums.
+Since the answer may be too large, return it modulo 109 + 7.
+
+Example 1:
+Input: nums = [1,2,3,4,5], requests = [[1,3],[0,1]]
+Output: 19
+Explanation: One permutation of nums is [2,1,3,4,5] with the following result: 
+requests[0] -> nums[1] + nums[2] + nums[3] = 1 + 3 + 4 = 8
+requests[1] -> nums[0] + nums[1] = 2 + 1 = 3
+Total sum: 8 + 3 = 11.
+A permutation with a higher total sum is [3,5,4,2,1] with the following result:
+requests[0] -> nums[1] + nums[2] + nums[3] = 5 + 4 + 2 = 11
+requests[1] -> nums[0] + nums[1] = 3 + 5  = 8
+Total sum: 11 + 8 = 19, which is the best that you can do.
+
+Example 2:
+Input: nums = [1,2,3,4,5,6], requests = [[0,1]]
+Output: 11
+Explanation: A permutation with the max total sum is [6,5,4,3,2,1] with request sums [11].
+
+Example 3:
+Input: nums = [1,2,3,4,5,10], requests = [[0,2],[1,3],[1,1]]
+Output: 47
+Explanation: A permutation with the max total sum is [4,10,5,3,2,1] with request sums [19,18,10].
+
+
+Solution:
+
+class Solution:
+    def maxSumRangeQuery(self, nums: List[int], requests: List[List[int]]) -> int:   
+        ########### O(n^2);O(n)
+        """
+        # get picked frequency of the index
+        freq={}
+        for i,j in requests:
+            for each in range(i,j+1):
+                freq[each]=freq.get(each,0)+1
+        
+        # initialize heap, to get max number from nums
+        heap=[]
+        for each in nums:
+            heappush(heap,-each)
+        
+        # sort frequency based on repeated times of index in reverse
+        multiplier=sorted(freq.values(),reverse=True)
+        
+        # iterate over repeated index numbers and multiple it with max to min numbers
+        total=0
+        for each in multiplier:
+            total+=each*(-heappop(heap))
+        return total%((10**9)+7)
+        """
+        
+        ########### O(nlogn);O(n)
+        
+        # get prefix of picked index
+        prefix=[0]*len(nums)
+        for i,j in requests:
+            prefix[i]+=1
+            if j+1<len(prefix):
+                prefix[j+1]-=1
+    
+        for each in range(1,len(prefix)):
+            prefix[each]+=prefix[each-1]
+       
+        # sort nums and prefix in reverse order i.e. max to min
+        nums.sort(reverse=True)    
+        prefix.sort(reverse=True)
+        
+        # iterate over prefix and multiple it with max to min numbers
+        total=0
+        for each in range(len(prefix)):
+            total+=prefix[each]*(nums[each])
+        return total%((10**9)+7)
