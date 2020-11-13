@@ -41,7 +41,7 @@ class Solution:
         
         ####### O(d*target*f); O(target*d) Bottom up approach
         
-        
+        """
         dp=[[0 for i in range(target+1)] for i in range(d)]
         
         for i in range(1,min(target,f)+1):
@@ -56,3 +56,23 @@ class Solution:
                     dp[i][j]+=dp[i-1][prev] 
                 
         return dp[-1][-1]%((10**9)+7)
+        """
+        ########## O(f*min(d,target)); O(target*d) Top Down Approach
+        
+        visited = {}
+        def getroll(d,target):
+            
+            if target<0 or d<0:
+                return 0
+            if target==0 and d==0:
+                return 1
+            if (d,target) in visited:
+                return visited[(d,target)]
+            cnt=0
+            
+            for each in range(1,f+1):
+                cnt+=getroll(d-1,target-each)
+            visited[(d,target)]=cnt
+            return cnt
+        
+        return getroll(d,target)%((10**9)+7)
