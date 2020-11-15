@@ -1,0 +1,53 @@
+Problem Statement:
+
+Given a string S, check if the letters can be rearranged so that two characters that are adjacent to each other are not the same.
+If possible, output any possible result.  If not possible, return the empty string.
+
+Example 1:
+Input: S = "aab"
+Output: "aba"
+
+Example 2:
+Input: S = "aaab"
+Output: ""
+
+
+Solution:
+class Solution:
+    def reorganizeString(self, S: str) -> str:
+        
+        ####### O(nlogn);O(n)
+        
+        # get frequencies of S
+        count=collections.Counter(S)
+        
+        # initialize max heap
+        heap=[]
+        for i,j in count.items():
+            heappush(heap,(-j,i))
+        
+        ans=""
+        while heap:
+            # if ans is not empty and last char appended in ans is same as top of heap
+            if ans and ans[-1]==heap[0][1]:
+                
+                # check if only one char is present in heap
+                if len(heap)==1:
+                    return ""
+                
+                # pop top of heap temporarily and access next top and append both back to heap if freq is not zero
+                tempvalue,tempchar=heappop(heap)
+                newvalue,newchar=heappop(heap)
+                ans+=newchar
+                newvalue+=1
+                heappush(heap,(tempvalue,tempchar))
+                if -newvalue>0:
+                    heappush(heap,(newvalue,newchar))
+            else:
+                # else access top of heap and append to ans and also update freq of char
+                value,char=heappop(heap)
+                ans+=char
+                value+=1
+                if -value>0:
+                    heappush(heap,(value,char))
+        return ans
