@@ -1,0 +1,35 @@
+Problem Statement:
+
+Given a m * n matrix mat of integers, sort it diagonally in ascending order from the top-left to the bottom-right then return the sorted array.
+
+Example 1:
+Input: mat = [[3,3,1,1],[2,2,1,2],[1,1,1,2]]
+Output: [[1,1,1,1],[1,2,2,2],[1,2,3,3]]
+
+
+SOlution:
+class Solution:
+    def diagonalSort(self, mat: List[List[int]]) -> List[List[int]]:
+        ###### O(mnlogn); O((m+n)*min(m,n))
+        
+        diff = {}
+        
+        # cell with same difference lies in same diagonal (from left to right)
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+            
+                # if same diff does not exists, initialize min heap
+                if (i-j) not in diff:
+                    diff[i-j]=([mat[i][j]])
+                    
+                # else, push new element to same diff heap
+                else:
+                    heappush(diff[i-j],mat[i][j])
+        
+        # now pop elements from each diff and set new value viz. new min value for each diff
+        for i in range(len(mat)):
+            for j in range(len(mat[0])):
+                mat[i][j]=heappop(diff[i-j])
+                
+        
+        return mat
