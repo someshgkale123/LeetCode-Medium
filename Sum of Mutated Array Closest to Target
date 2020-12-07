@@ -1,0 +1,81 @@
+Problem Statement:
+ 
+Given an integer array arr and a target value target, return the integer value such that when we change all the integers larger than value in the given array to be equal to value, the sum of the array gets as close as possible (in absolute difference) to target.
+In case of a tie, return the minimum such integer.
+Notice that the answer is not neccesarilly a number from arr.
+
+Example 1:
+Input: arr = [4,9,3], target = 10
+Output: 3
+Explanation: When using 3 arr converts to [3, 3, 3] which sums 9 and that's the optimal answer.
+
+Example 2:
+Input: arr = [2,3,5], target = 10
+Output: 5
+
+Example 3:
+Input: arr = [60864,25176,27249,21296,20204], target = 56803
+Output: 11361
+
+
+Solution:
+class Solution:
+    def findBestValue(self, arr: List[int], target: int) -> int:
+        
+        ###### O(nlogn); O(n)
+        
+        # sort the array
+        arr.sort()
+        
+        # store prefixsum of the array to get constant lookup for index sums
+        prefixsum=[arr[0]]
+        for each in range(1,len(arr)):
+            prefixsum.append(prefixsum[-1]+arr[each])
+            
+        # check for numbers greater than middle value
+        def checktarget(middle):
+            total=0
+            left=0
+            right=len(arr)-1
+            while left<right:
+                mid=(left+right)//2
+                if middle>=arr[mid]:
+                    left+=1
+                else:
+                    right-=1
+            if left-1<0:
+                
+                # all numbers are greater than middle value, return middle value * length of arr
+                return middle*(len(arr)-left)
+            
+            # return previous sum from prefixsum and get furthur sum from middle value * (length of arr - left index)
+            return prefixsum[left-1]+middle*(len(arr)-left)
+        
+        # for storing the value and difference of target and sum of array
+        indices={}
+        
+        left=0
+        right=arr[-1]
+        while left<=right:
+            mid=(left+right)//2
+            value=checktarget(mid)
+           
+            # if current sum is greater than target, store the current diff and mid value and decrement right window
+            if value>=target:
+                if value-target not in indices:
+                    indices[value-target]=mid
+                else:
+                    indices[value-target]=min(indices[value-target],mid)
+                right=mid-1
+            
+            
+            # else current sum is less than target, store the current diff and mid value and decrement left window
+            else:
+                if target-value not in indices:
+                    indices[target-value]=mid
+                else:
+                    indices[target-value]=min(indices[target-value],mid)
+                left=mid+1
+        
+        # return value with min key viz. min difference
+        return indices[min(indices)]
