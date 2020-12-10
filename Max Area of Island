@@ -20,7 +20,6 @@ Example 2:
 Given the above grid, return 0.
 
 
-
 Solution:
 class Solution:
     def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
@@ -29,7 +28,7 @@ class Solution:
                 return
             if grid[i][j]==1:
                 self.ans+=1
-                grid[i][j]=0
+                grid[i][j]=0 # mark as visited
             dfs(grid,i,j-1)
             dfs(grid,i-1,j)
             dfs(grid,i,j+1)
@@ -44,5 +43,5 @@ class Solution:
                     dfs(grid,i,j)
                     self.mx=max(self.mx,self.ans)
                     self.ans=0
-        return(self.mx)
+        return self.mx
                 
