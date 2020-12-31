@@ -47,4 +47,15 @@ class Solution:
         
         return construct(TreeNode(0),inorder,preorder)
         
+        """
+        ######## O(N); O(N) using hasmap to store indices will furthur optimize the code
+        def getindex(preorder,low,high):
+            if low>=high:
+                return None
+            new=TreeNode(preorder.pop(0))
+            new.left=getindex(preorder,low,inorder.index(new.val))
+            new.right=getindex(preorder,inorder.index(new.val)+1,high)
+            return new
+        return getindex(preorder,0,len(preorder))
+        """
             
