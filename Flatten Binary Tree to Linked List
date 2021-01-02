@@ -45,3 +45,18 @@ class Solution:
             if li:
                 root.left=None
                 root.right=li[-1]
+        ##### Recursive
+        
+        if not root.left and not root.right:
+            return root
+        
+        L=self.flatten(root.left)
+        R=self.flatten(root.right)
+        
+        if L:
+            L.right=root.right
+            root.right=root.left
+            root.left=None
+        
+        return R if R else L
+        
