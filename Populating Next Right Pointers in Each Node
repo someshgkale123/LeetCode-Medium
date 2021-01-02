@@ -36,6 +36,7 @@ class Node:
 """
 class Solution:
     def connect(self, root: 'Node') -> 'Node':
+        ##### Iterative O(N);O(N)
         stack=[root]
         while root:
             temp=[]
@@ -52,3 +53,16 @@ class Solution:
                 stack=temp
             else:
                 return root
+                
+        ##### Recursive
+        if not root:
+            return None
+        
+        if root.right:
+            root.left.next=root.right
+            if root.next:
+                root.right.next=root.next.left
+                
+        self.connect(root.left)
+        self.connect(root.right)
+        return root
