@@ -22,6 +22,7 @@ Solution:
 
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
+        ###### slower search in string
         stri=""
         maxx=0
         for i in s:
@@ -32,3 +33,20 @@ class Solution:
             if len(stri)>maxx:
                 maxx=len(stri)
         return(maxx)
+        
+        ###### faster search using hashmap
+        ### O(N);O(N)
+        left=0
+        previous={}
+        mx=0
+        for each in range(len(s)):
+            if s[each] not in previous:
+                previous[s[each]]=each
+            else:
+                mx=max(mx,len(previous))
+                while s[each] in previous:
+                    del previous[s[left]]
+                    left+=1
+                previous[s[each]]=each
+        mx=max(mx,len(previous))
+        return mx
