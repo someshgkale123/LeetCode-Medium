@@ -43,4 +43,31 @@ class Solution:
         end.next=curr
         return head
         
+        ################# One Pass, O(N); O(1)
+        pntr=head
+        prev=None
+        start=None
+        
+        while pntr and n:
+            if m:
+                start,prev,pntr=prev,pntr,pntr.next
+                m-=1
+                
+            else:
+                nxt=pntr.next
+                pntr.next=prev
+                prev=pntr
+                pntr=nxt
+            n-=1
+            
+        if start:
+            mstart=start.next
+            start.next=prev
+            mstart.next=pntr
+            return head
+        else:
+            head.next=pntr
+            return prev
+        
+        
             
