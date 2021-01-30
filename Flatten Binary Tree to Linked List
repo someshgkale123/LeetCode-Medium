@@ -59,4 +59,18 @@ class Solution:
             root.left=None
         
         return R if R else L
-        
+        ############# Iterative O(N),O(1)
+        node=root
+        while node:
+            if node.left:
+                righttail=node.left
+                
+                while righttail.right:
+                    righttail=righttail.right
+                
+                righttail.right=node.right
+                node.right=node.left
+                node.left=None
+                
+            node=node.right
+    
