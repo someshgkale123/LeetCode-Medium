@@ -109,3 +109,21 @@ class Solution:
             ans[i].next=ans[i+1]
             ans[i].child=None
         return ans[0]
+        
+        ############# O(N); O(1)
+        curr=head
+        while curr:
+            if not curr.child:
+                curr=curr.next
+                continue
+            nxt=curr.next
+            tail=curr.child
+            while tail.next:
+                tail=tail.next
+            tail.next=nxt
+            if nxt:
+                nxt.prev=tail
+            curr.next=curr.child
+            curr.child.prev=curr
+            curr.child=None
+        return head
