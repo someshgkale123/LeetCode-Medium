@@ -54,3 +54,63 @@ class Solution:
                     ans+=i
         return (ans)
                 
+        ########## Recursive O(max(K)*n); O(n)
+        """
+        self.n=len(s)
+        def recurse(indx,s):
+        
+            if not s:
+                return ""
+            if len(s)==1 and s.isalpha():
+                return s
+            # print(s)
+            chars=""
+            while indx<len(s) and s[indx].isalpha():
+                chars+=s[indx]
+                indx+=1
+                        
+            digit=""
+            while indx<len(s) and s[indx].isdigit():
+                digit+=s[indx]
+                indx+=1
+            if digit:
+                temp=None
+                id=indx
+                while temp!=0:
+                    if s[id]=="[":
+                        if not temp:
+                            temp=1
+                        else:
+                            temp+=1
+                    elif s[id]=="]":
+                        temp-=1
+                    id+=1
+                return chars+(recurse(0,s[indx+1:id-1])*int(digit))+recurse(0,s[id:])
+            else:
+                return chars
+        
+        return recurse(0,s)
+        """
+        ########## Iterative using Two stacks O(N); O(k(number of open bracket pairs)) 
+        
+        chars=[""]
+        digits=[""]
+        indx=0
+        while indx<len(s):
+            if s[indx].isdigit():
+                digit=""
+                while s[indx].isdigit():
+                    digit+=s[indx]
+                    indx+=1
+                digits.append(int(digit))
+                chars.append("")
+            elif s[indx]=="]":
+                digit=digits.pop()
+                string=chars.pop()[1:]
+                chars[-1]+=string*digit
+                indx+=1
+            else:
+                chars[-1]+=s[indx]
+                indx+=1
+        
+        return chars[0]
