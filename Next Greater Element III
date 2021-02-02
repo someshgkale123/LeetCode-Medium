@@ -1,0 +1,51 @@
+Problem Statement:
+
+Given a positive integer n, find the smallest integer which has exactly the same digits existing in the integer n and is greater in value than n. If no such positive integer exists, return -1.
+Note that the returned integer should fit in 32-bit integer, if there is a valid answer but it does not fit in 32-bit integer, return -1.
+
+Example 1:
+Input: n = 12
+Output: 21
+
+Example 2:
+Input: n = 21
+Output: -1
+
+
+
+Solution:
+class Solution:
+    def nextGreaterElement(self, n: int) -> int:
+        
+        ######## O(N); O(N)
+        def reverse(left,right,li):
+            while left<right:
+                li[left],li[right]=li[right],li[left]
+                left+=1
+                right-=1
+        
+        li=list(map(int,str(n)))
+        
+        mn=float("-inf")
+        i=len(li)-1
+        while i>=0 and li[i]>=mn:
+            mn=li[i]
+            i-=1
+            
+        if i<0:
+            return -1
+        
+        j=len(li)-1
+        while i<j and li[i]>=li[j]:
+            j-=1
+            
+        li[i],li[j]=li[j],li[i]
+        
+        
+        
+        reverse(i+1,len(li)-1,li)
+        ans=0
+        for each in li:
+            ans=ans*10+each
+        return -1 if ans>2**31-1 else ans
+            
