@@ -1,0 +1,28 @@
+Problem Statement:
+
+Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.
+
+Example 1:
+Input: intervals = [[0,30],[5,10],[15,20]]
+Output: 2
+
+Example 2:
+Input: intervals = [[7,10],[2,4]]
+Output: 1
+
+
+Solution:
+class Solution:
+    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+        ###### O(NlogN); O(N)
+        intervals.sort(key=lambda x:x[0])
+        
+        allocated=[]
+        heappush(allocated,intervals[0][1])
+        
+        for i,j in intervals[1:]:
+            if allocated[0]<=i:
+                heappop(allocated)
+            heappush(allocated,j)
+        
+        return len(allocated)
