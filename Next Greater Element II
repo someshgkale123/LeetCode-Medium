@@ -33,3 +33,21 @@ class Solution:
                 ans[stack.pop()]=nums[i%len(nums)]  
             stack+=[i%len(nums)]
         return ans
+        
+        ###### O(N); O(N)
+        stack=[]
+        ans=[-1]*len(nums)
+        
+        def getnxtgt(nums):
+            for each in range(len(nums)-1,-1,-1):
+                while stack and stack[-1]<=nums[each]:
+                    stack.pop()
+                if stack:
+                    ans[each]=stack[-1]
+                stack.append(nums[each])
+        
+        getnxtgt(nums)
+        getnxtgt(nums)
+        return ans
+        
+
