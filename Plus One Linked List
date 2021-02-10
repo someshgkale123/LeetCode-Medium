@@ -1,0 +1,40 @@
+Problem Statement:
+
+Given a non-negative integer represented as a linked list of digits, plus one to the integer.
+The digits are stored such that the most significant digit is at the head of the list.
+
+Example 1:
+Input: head = [1,2,3]
+Output: [1,2,4]
+
+Example 2:
+Input: head = [0]
+Output: [1]
+
+
+Solution:
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def plusOne(self, head: ListNode) -> ListNode:
+
+        ##### O(N); O(1)
+        dummy=ListNode(0)
+        dummy.next=head
+        
+        lessthan9=dummy
+        while head:
+            if head.val<9:
+                lessthan9=head
+            head=head.next
+        
+        lessthan9.val+=1
+        lessthan9=lessthan9.next
+        while lessthan9:
+            lessthan9.val=0
+            lessthan9=lessthan9.next
+        
+        return dummy.next if dummy.val==0 else dummy
