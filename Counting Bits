@@ -20,3 +20,13 @@ class Solution:
         for i in range(1,num+1):
             li[i]=li[i&(i-1)]+1
         return li
+        
+        ####### O(N); O(N)
+        ans=[0]*(num+1)
+        
+        for i in range(1,num+1):
+            if i%2==0:
+                ans[i]=ans[i//2]
+            else:
+                ans[i]=ans[i//2]+1
+        return ans
