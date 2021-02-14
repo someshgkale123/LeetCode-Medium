@@ -1,0 +1,94 @@
+Problem Statement:
+
+Design a Leaderboard class, which has 3 functions:
+addScore(playerId, score): Update the leaderboard by adding score to the given player's score. If there is no player with such id in the leaderboard, add him to the leaderboard with the given score.
+top(K): Return the score sum of the top K players.
+reset(playerId): Reset the score of the player with the given id to 0 (in other words erase it from the leaderboard). It is guaranteed that the player was added to the leaderboard before calling this function.
+Initially, the leaderboard is empty.
+
+Example 1:
+Input: 
+["Leaderboard","addScore","addScore","addScore","addScore","addScore","top","reset","reset","addScore","top"]
+[[],[1,73],[2,56],[3,39],[4,51],[5,4],[1],[1],[2],[2,51],[3]]
+Output: 
+[null,null,null,null,null,null,73,null,null,null,141]
+Explanation: 
+Leaderboard leaderboard = new Leaderboard ();
+leaderboard.addScore(1,73);   // leaderboard = [[1,73]];
+leaderboard.addScore(2,56);   // leaderboard = [[1,73],[2,56]];
+leaderboard.addScore(3,39);   // leaderboard = [[1,73],[2,56],[3,39]];
+leaderboard.addScore(4,51);   // leaderboard = [[1,73],[2,56],[3,39],[4,51]];
+leaderboard.addScore(5,4);    // leaderboard = [[1,73],[2,56],[3,39],[4,51],[5,4]];
+leaderboard.top(1);           // returns 73;
+leaderboard.reset(1);         // leaderboard = [[2,56],[3,39],[4,51],[5,4]];
+leaderboard.reset(2);         // leaderboard = [[3,39],[4,51],[5,4]];
+leaderboard.addScore(2,51);   // leaderboard = [[2,51],[3,39],[4,51],[5,4]];
+leaderboard.top(3);           // returns 141 = 51 + 51 + 39;
+
+
+Solution:
+class TreeNode():
+    
+    def __init__(self,val):
+        self.val=val
+        self.prev=None
+        self.next=None
+        
+class Leaderboard:
+
+    def __init__(self):
+        self.head=TreeNode(-1)
+        self.tail=TreeNode(-1)
+        self.head.next=self.tail
+        self.tail.prev=self.head
+        self.id={}
+    
+    ###### O(N); O(logn) if sortedDict(treemap) is used
+    def addScore(self, playerId: int, score: int) -> None:
+        if playerId in self.id:
+            old=self.id[playerId].val
+            node=self.id[playerId]
+            p=node.prev
+            n=node.next
+            p.next=n
+            n.prev=p
+            del self.id[playerId]
+            self.addScore(playerId,score+old)
+        else:
+            node=TreeNode(score)
+            self.id[playerId]=node
+            pntr=self.head.next
+            while pntr.next and pntr.val>=score:
+                pntr=pntr.next
+            last=pntr.prev
+            last.next=node
+            node.prev=last
+            node.next=pntr
+            pntr.prev=node
+            
+                
+    ##### O(k)
+    def top(self, K: int) -> int:
+        curr=self.head.next
+        ans=0
+        while K:
+            ans+=curr.val
+            curr=curr.next
+            K-=1
+        return ans
+    
+    ##### O(1)
+    def reset(self, playerId: int) -> None:
+        node=self.id[playerId]
+        p=node.prev
+        n=node.next
+        p.next=n
+        n.prev=p
+        del self.id[playerId]
+
+
+# Your Leaderboard object will be instantiated and called as such:
+# obj = Leaderboard()
+# obj.addScore(playerId,score)
+# param_2 = obj.top(K)
+# obj.reset(playerId)
