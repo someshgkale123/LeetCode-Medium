@@ -1,0 +1,52 @@
+Problem Statement:
+
+Given an array arr of positive integers, consider all binary trees such that:
+Each node has either 0 or 2 children;
+The values of arr correspond to the values of each leaf in an in-order traversal of the tree.  (Recall that a node is a leaf if and only if it has 0 children.)
+The value of each non-leaf node is equal to the product of the largest leaf value in its left and right subtree respectively.
+Among all possible binary trees considered, return the smallest possible sum of the values of each non-leaf node.  It is guaranteed this sum fits into a 32-bit integer.
+
+Example 1:
+Input: arr = [6,2,4]
+Output: 32
+Explanation:
+There are two possible trees.  The first has non-leaf node sum 36, and the second has non-leaf node sum 32.
+
+    24            24
+   /  \          /  \
+  12   4        6    8
+ /  \               / \
+6    2             2   4
+ 
+
+Solution:
+class Solution:
+    def mctFromLeafValues(self, arr: List[int]) -> int:
+        
+        ####### O(N^2); O(1)
+        """
+        result=0
+        while len(arr)>1:
+            mn=arr.index(min(arr))
+            
+            if 0<mn<len(arr)-1:
+                result+=arr[mn]*min(arr[mn-1],arr[mn+1])
+            else:
+                result+=arr[mn]*(arr[mn+1] if mn==0 else arr[mn-1])
+            arr.pop(mn)
+            # print(arr)
+        return result
+        """
+        ######## O(N);O(N)
+        result=0
+        stack=[float("inf")]
+        for each in arr:
+            while stack and stack[-1]<=each:
+                value=stack.pop()
+                if stack:
+                    result+=value*min(stack[-1],each)
+            stack.append(each)
+        # print(stack)
+        while len(stack)>2:
+            result+=stack.pop()*stack[-1]
+        return result
