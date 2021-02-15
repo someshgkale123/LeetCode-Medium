@@ -1,0 +1,53 @@
+Problem Statement:
+
+Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+Example 1:
+Input: [3,2,1,5,6,4] and k = 2
+Output: 5
+
+Example 2:
+Input: [3,2,3,1,2,4,5,5,6] and k = 4
+Output: 4
+
+
+Solution:
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        ### O(NlogK) ; O(K)
+        """
+        heap=[]
+        for each in nums:
+            heappush(heap,each)
+            if len(heap)>k:
+                heappop(heap)
+        return heappop(heap)
+        """
+        ###### O(N); O(1)
+        n=len(nums)
+        
+        def getpartition(nums,left,right,p_index):
+            
+            nums[p_index],nums[right]=nums[p_index],nums[right]
+            index=left
+            pivot=nums[right]
+            for each in range(left,right):
+                if nums[each]<pivot:
+                    nums[index],nums[each]=nums[each],nums[index]
+                    index+=1
+            nums[index],nums[right]=nums[right],nums[index]
+            return index
+            
+        def findpivot(nums,left,right):
+            if len(nums)==1:
+                return nums[0]
+            p_index=random.randint(left,right)
+            index=getpartition(nums,left,right,p_index)
+            if (n-k)==index:
+                return nums[index]
+            elif (n-k)>index:
+                return findpivot(nums,index+1,right)
+            else:
+                return findpivot(nums,left,index-1)
+        return findpivot(nums,0,len(nums)-1)
+            
